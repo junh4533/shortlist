@@ -8,7 +8,8 @@ async function main() {
   const filePath = localDatabasePath();
   console.log(`Database ${filePath ?? databaseUrl().replace(/\?.*$/, "")}`);
   if (filePath) {
-    console.log(`  size ${(statSync(filePath).size / 1e6).toFixed(1)} MB`);
+    const sizeMb = statSync(filePath).size / 1e6;
+    console.log(`  size ${sizeMb.toFixed(1)} MB (budget: stay under 3000 MB for Turso's 5 GB free tier)`);
   }
 
   const tables = await client.execute(
@@ -19,6 +20,18 @@ async function main() {
     const name = String(row.name);
     const count = await client.execute(`SELECT count(*) AS n FROM "${name}"`);
     console.log(`  ${name.padEnd(24)} ${count.rows[0].n}`);
+  }
+
+  const jobsByProvider = await client.execute(
+    `SELECT ats_provider, sum(closed_at IS NULL) AS open, sum(closed_at IS NOT NULL) AS closed,
+            sum(is_us = 1) AS us, sum(length(clean_text)) AS text_bytes
+     FROM jobs GROUP BY ats_provider ORDER BY ats_provider`,
+  );
+  console.log("\nJobs by provider (open / closed / US signal / text MB)");
+  for (const row of jobsByProvider.rows) {
+    console.log(
+      `  ${String(row.ats_provider).padEnd(16)} ${String(row.open).padStart(7)} ${String(row.closed).padStart(7)} ${String(row.us).padStart(7)} ${(Number(row.text_bytes ?? 0) / 1e6).toFixed(1).padStart(8)}`,
+    );
   }
 
   const companies = await client.execute(

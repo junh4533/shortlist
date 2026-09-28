@@ -51,6 +51,14 @@ export const jobs = sqliteTable(
     postedAt: text("posted_at"),
     updatedAt: text("updated_at"),
     fetchedAt: text("fetched_at").notNull(),
+    titleNorm: text("title_norm"),
+    locationNorm: text("location_norm"),
+    seniority: text("seniority"),
+    isUs: integer("is_us", { mode: "boolean" }),
+    postedTs: integer("posted_ts"),
+    contentHash: text("content_hash"),
+    firstSeenAt: text("first_seen_at"),
+    closedAt: text("closed_at"),
   },
   (table) => [
     primaryKey({

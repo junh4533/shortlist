@@ -6,7 +6,9 @@ import {
   APPLICATION_STATUS_ROW_CLASSES,
   APPLICATION_STATUSES,
 } from "@/lib/constants";
+import { getCurrentUserId } from "@/lib/current-user";
 import {
+  CANDIDATE_CAP,
   defaultJobSortDir,
   formatPay,
   formatPostedDate,
@@ -15,15 +17,25 @@ import {
   parseJobSort,
   type JobSortColumn,
   type JobSortDir,
-} from "@/lib/jobs-query";
+} from "@/lib/jobs/query";
+import { getUserPreferences } from "@/lib/preferences-store";
 import { StatusSelect } from "./status-select";
 
 export const dynamic = "force-dynamic";
 
-function sortHref(
-  params: { q?: string; status?: string; sort?: string; dir?: string },
-  column: JobSortColumn,
-) {
+type PageParams = { q?: string; status?: string; sort?: string; dir?: string; page?: string };
+
+function hrefWith(params: PageParams, changes: Partial<PageParams>) {
+  const merged = { ...params, ...changes };
+  const search = new URLSearchParams();
+  for (const [key, value] of Object.entries(merged)) {
+    if (value) search.set(key, value);
+  }
+  const query = search.toString();
+  return query ? `/?${query}` : "/";
+}
+
+function sortHref(params: PageParams, column: JobSortColumn) {
   const current = parseJobSort(params.sort, params.dir);
   const nextDir: JobSortDir =
     current.sort === column
@@ -31,12 +43,41 @@ function sortHref(
         ? "desc"
         : "asc"
       : defaultJobSortDir(column);
-  const search = new URLSearchParams();
-  if (params.q) search.set("q", params.q);
-  if (params.status) search.set("status", params.status);
-  search.set("sort", column);
-  search.set("dir", nextDir);
-  return `/?${search.toString()}`;
+  return hrefWith(params, { sort: column, dir: nextDir, page: undefined });
+}
+
+function Pagination({
+  params,
+  page,
+  pageCount,
+}: {
+  params: PageParams;
+  page: number;
+  pageCount: number;
+}) {
+  if (pageCount <= 1) return null;
+  const link = "rounded-md border border-zinc-300 bg-white px-3 py-1.5 hover:bg-zinc-100";
+  return (
+    <nav className="mt-4 flex items-center justify-between text-sm text-zinc-700">
+      {page > 1 ? (
+        <Link className={link} href={hrefWith(params, { page: String(page - 1) })}>
+          ← Previous
+        </Link>
+      ) : (
+        <span />
+      )}
+      <span>
+        Page {page} of {pageCount}
+      </span>
+      {page < pageCount ? (
+        <Link className={link} href={hrefWith(params, { page: String(page + 1) })}>
+          Next →
+        </Link>
+      ) : (
+        <span />
+      )}
+    </nav>
+  );
 }
 
 function SortHeader({
@@ -46,7 +87,7 @@ function SortHeader({
 }: {
   label: string;
   column: JobSortColumn;
-  params: { q?: string; status?: string; sort?: string; dir?: string };
+  params: PageParams;
 }) {
   const current = parseJobSort(params.sort, params.dir);
   const active = current.sort === column;
@@ -75,23 +116,22 @@ function SortHeader({
 export default async function Home({
   searchParams,
 }: {
-  searchParams: Promise<{
-    status?: string;
-    q?: string;
-    sort?: string;
-    dir?: string;
-  }>;
+  searchParams: Promise<PageParams>;
 }) {
   const params = await searchParams;
-  const [matches, counts] = await Promise.all([
+  const preferences = await getUserPreferences(await getCurrentUserId());
+  const [result, counts] = await Promise.all([
     listMatchedJobs({
+      preferences,
       status: params.status,
       q: params.q,
       sort: params.sort,
       dir: params.dir,
+      page: Number(params.page) || 1,
     }),
     jobCounts(),
   ]);
+  const matches = result.rows;
   const currentSort = parseJobSort(params.sort, params.dir);
 
   return (
@@ -101,7 +141,7 @@ export default async function Home({
           <div>
             <h1 className="text-2xl font-semibold tracking-tight">Job matches</h1>
             <p className="mt-1 text-sm text-zinc-600">
-              {matches.length} matching roles · {counts.jobCount} stored ·{" "}
+              {result.total} matching roles · {counts.jobCount} open jobs stored ·{" "}
               {counts.liveCompanies} live boards. Filters come from{" "}
               <code className="rounded bg-zinc-100 px-1">search.config.yaml</code>.
             </p>
@@ -233,6 +273,13 @@ npm run ingest -- --limit 40`}
             </table>
           </div>
         )}
+        {result.truncated ? (
+          <p className="mt-3 text-xs text-zinc-500">
+            Showing matches from the newest {CANDIDATE_CAP.toLocaleString()} candidate jobs;
+            narrow your filters to see older ones.
+          </p>
+        ) : null}
+        <Pagination params={params} page={result.page} pageCount={result.pageCount} />
       </main>
     </div>
   );

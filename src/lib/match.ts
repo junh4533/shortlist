@@ -344,13 +344,13 @@ const US_LOCATION_PHRASES = [
 	"newark",
 ];
 
-function isNonUsLocation(location: string, extraExclude: string[]) {
+export function isNonUsLocation(location: string, extraExclude: string[] = []) {
 	return [...NON_US_LOCATION_PHRASES, ...extraExclude].some((phrase) =>
 		containsPhrase(location, phrase),
 	);
 }
 
-function hasUsLocationSignal(location: string, include: string[]) {
+export function hasUsLocationSignal(location: string, include: string[] = []) {
 	const tokens = [
 		...US_LOCATION_PHRASES,
 		...include.filter((token) => token.toLowerCase() !== "remote"),
