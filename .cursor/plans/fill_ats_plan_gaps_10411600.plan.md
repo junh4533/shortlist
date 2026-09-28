@@ -1,24 +1,30 @@
 ---
 name: Fill ATS Plan Gaps
-overview: "Personal Multi-ATS job search app that runs entirely on your PC: Next.js + SQLite, YAML search config, manual or optional scheduled ingest. No cloud host, no always-on server."
+overview: "Personal Multi-ATS job search app on this PC: Next.js + SQLite already scaffolded, YAML filters, application-status tracking, ingest from the Downloads CSV. No cloud host."
 todos:
   - id: search-config
     content: Add Zod-validated search.config.yaml (titles, skills, location, pay, seniority) and prefill from the resume
     status: pending
   - id: seed-slugs
-    content: Load already-downloaded LastRound CSV at datasets/lastroundai-ats-company-directory-2026-08.csv into companies, then verify each slug
+    content: Load LastRound CSV from Downloads (not in-repo) into companies, then verify each slug
     status: pending
   - id: fix-ashby
     content: Use official Ashby posting-api/job-board endpoint, not v1/publishing/jobBoard
     status: pending
   - id: normalize-ingest
-    content: Map Greenhouse/Lever/Ashby fields into one schema, strip HTML, polite crawl every 12-24h
+    content: Map Greenhouse/Lever/Ashby fields into one schema, strip HTML, polite crawl, write data/jobs.db
     status: pending
   - id: skill-filter
     content: Apply search.config.yaml filters (title, location, pay, skills) in SQL + keyword rank; defer embeddings
     status: pending
   - id: nextjs-ui
-    content: Local Next.js app to browse ranked matches; ingest via npm script, not on page load
+    content: Local Next.js table of ranked matches plus per-job application status dropdown and status filter
+    status: pending
+  - id: application-status
+    content: Persist application status in a separate SQLite table so re-ingest never overwrites tracking
+    status: pending
+  - id: agent-gitignore
+    content: Add always-apply Cursor rule plus gitignore for data/*.db; never scan node_modules, .next, or lockfiles
     status: pending
 isProject: false
 ---
@@ -99,11 +105,41 @@ Windows has no Unix `cron`. If you later want it unattended, use **Task Schedule
 Ingest does **not** write a second jobs CSV. Listings land in two places on this PC:
 
 1. **Database (source of truth):** [`data/jobs.db`](C:\Users\junh4\Desktop\jb\data\jobs.db) — created on first `npm run ingest`. Every normalized posting (title, company, location, pay, clean text, apply URL, rank) is a row in the `jobs` table. Inspect with [DB Browser for SQLite](https://sqlitebrowser.org/) if you want raw rows.
-2. **App (what you read):** `http://localhost:3000` after `npm run dev` — a table of **ranked matches** only (filtered by `search.config.yaml`). Columns: title, company, location, pay, score, apply link. Click through to the ATS page.
+2. **App (what you read):** `http://localhost:3000` after `npm run dev` — a table of **ranked matches** (filtered by `search.config.yaml`). Columns: title, company, location, pay, score, apply link, **application status**. Click through to the ATS page.
 
-The company-slug seed is already on disk and is **not** the job listings:
+The company-slug seed is **outside the repo** (datasets folder was removed). Ingest will read:
 
-- [`datasets/lastroundai-ats-company-directory-2026-08.csv`](C:\Users\junh4\Desktop\jb\datasets\lastroundai-ats-company-directory-2026-08.csv) — ~9,935 company slugs. Ingest reads this into `companies`, then fetches each board’s JSON into `jobs`.
+- [`C:\Users\junh4\Downloads\lastroundai-ats-company-directory-2026-08.csv`](C:\Users\junh4\Downloads\lastroundai-ats-company-directory-2026-08.csv)
+
+Do not copy that CSV into the project unless needed at ingest time. Do not dump the file into chat or agent context (9k+ rows). Scripts stream it.
+
+## Application status tracking
+
+Each row in the UI gets a status control (select). Filter the table by status. Default is `new`.
+
+Statuses:
+
+- `new` — unseen / no decision
+- `interested`
+- `applied`
+- `interviewing`
+- `offered`
+- `rejected`
+- `not_qualified`
+- `skipped`
+
+Store tracking in a **separate** SQLite table so `npm run ingest` upserts of `jobs` never wipe your decisions:
+
+```
+job_tracking (
+  ats_provider, board_slug, external_id,  -- same unique key as jobs
+  status,                                 -- enum above
+  note,                                   -- optional free text
+  updated_at
+)
+```
+
+UI: dropdown on the row → server action updates `job_tracking` immediately. Optional toolbar filter: All / New / Applied / Not qualified / …. Ingest must not delete tracking rows for jobs that disappeared (keep history).
 
 Until the first ingest finishes, the UI is empty. Console output during ingest is progress logs only (slug X of N, errors), not the job list.
 
@@ -123,7 +159,7 @@ npm install -D drizzle-kit @types/better-sqlite3
 
 If `create-next-app` refuses a non-empty directory, pass the existing-folder prompt (or re-run with the same flags; `--yes` should accept it). Keep `datasets/` as-is.
 
-After scaffold (implementation, not these commands): add `search.config.yaml`, Drizzle schema, `scripts/ingest.ts`, and `data/` (gitignored except `.gitkeep`).
+**Scaffold is done.** Next.js 16 + React 19 + Tailwind 4 + drizzle-orm + better-sqlite3 + zod + yaml + cheerio are in [package.json](C:\Users\junh4\Desktop\jb\package.json). Do not re-run `create-next-app`. Remaining work is config, schema, ingest scripts, and UI.
 
 ## Search config file
 
@@ -340,16 +376,25 @@ Keep the original core, plus fields the config will filter on:
 4. Preferred skill hits vs `min_preferred_hits`
 5. Bonus skills bump score only
 
+## Agent / gitignore (token hygiene)
+
+When implementing, follow this and add an always-apply Cursor rule so later chats do too:
+
+- Never Read, Grep, Glob, or list `node_modules/`, `.next/`, `data/*.db`, or `package-lock.json`.
+- Honor [.gitignore](C:\Users\junh4\Desktop\jb\.gitignore). Also add `/data/*.db` and `/data/*.db-journal` so the job database is not committed or scanned.
+- Do not read the LastRound CSV or resume PDF into the model; only scripts touch those paths.
+- Prefer targeted reads of source files under `src/` and `scripts/`.
+
 ## Suggested build order (after you approve implementation)
 
-[jb](C:\Users\junh4\Desktop\jb) already contains the LastRound CSV. Do not download it again.
+Scaffold is already done. CSV stays in Downloads until ingest needs it.
 
-1. Run the scaffold commands above (Next.js + Drizzle deps).
-2. Add `search.config.yaml` + Zod loader (resume-prefilled).
-3. Load [`datasets/lastroundai-ats-company-directory-2026-08.csv`](C:\Users\junh4\Desktop\jb\datasets\lastroundai-ats-company-directory-2026-08.csv) → `companies`.
-4. Verify script: ping each slug, mark live/dead.
-5. Per-ATS fetchers + cheerio strip → `data/jobs.db` `jobs` table.
-6. Next.js table at `/` of ranked matches.
+1. Cursor rule + gitignore for `data/*.db`.
+2. `search.config.yaml` + Zod loader (resume-prefilled).
+3. Drizzle schema: `companies`, `jobs`, `job_tracking`.
+4. Load Downloads CSV → `companies` (stream; do not ingest the file into chat).
+5. Verify slugs; fetch ATS JSON → `jobs`.
+6. Next.js table: matches + status dropdown + status filter.
 7. Later: `prefill-config` from an updated PDF; optional Common Crawl harvester.
 
 ## What this plan drops from the original

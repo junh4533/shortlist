@@ -1,0 +1,17 @@
+---
+description: Do not scan gitignored or large data files (saves tokens)
+alwaysApply: true
+---
+
+# Ignore heavy / generated files
+
+Never Read, Grep, Glob, or list these paths:
+
+- `node_modules/`
+- `.next/`
+- `data/*.db` and SQLite sidecars
+- `package-lock.json`
+
+Honor `.gitignore`. Do not dump `datasets/*.csv` or resume PDFs into chat or model context. Scripts may stream those files; agents should only peek a few header lines if a schema check is required.
+
+Prefer targeted reads under `src/` and `scripts/`.

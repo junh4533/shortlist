@@ -1,0 +1,206 @@
+# Edit this file to change what jobs match. Re-ingest only when you want newer postings.
+# Title/location/pay/skill filters re-run on already-cached jobs.
+
+profile:
+  name: Jun Huang
+  home: Flushing, NY
+  years_experience: 4
+
+titles:
+  include:
+    # - Full Stack
+    - Frontend
+    - Front-End
+    - Front End
+    # - Software Engineer
+    - Software Developer
+    - React
+    - Next.js
+    - TypeScript
+    - UI Engineer
+    - UI Developer
+    - Frontend Engineer
+    - Frontend Developer
+    - Web Developer
+    - Web Engineer
+    - Solutions Engineer
+    - Web Platform Engineer
+
+  exclude:
+    - Staff
+    - Principal
+    - Distinguished
+    - Manager
+    - Director
+    - VP
+    - Intern
+    - Contract
+    - Mobile
+    - iOS
+    - Android
+    - Embedded
+    - Founding
+    - Agency
+    - Lead
+  prefer:
+    frontend: 3
+    fullstack: 2
+    backend: 1
+  aliases:
+    frontend:
+      - frontend
+      - front-end
+      - front end
+      - ui engineer
+      - react engineer
+    fullstack:
+      - full stack
+      - fullstack
+      - full-stack
+    backend:
+      - backend
+      - back-end
+      - back end
+      - server-side
+      - server side
+
+# Drop the job if any of these appear in the title or the description.
+exclude_phrases:
+  - New Grad
+  - New Graduate
+  - Graduate
+
+locations:
+  remote_ok: true
+  hybrid_ok: true
+  onsite_ok: true
+  us_only: true
+  include:
+    - Remote
+    - New York
+    - NYC
+    - NY
+    - Manhattan
+    - Brooklyn
+    - Queens
+    - Flushing
+    - Jersey City
+    - Hoboken
+    - Newark
+  exclude:
+    - Europe
+    - UK
+    - London
+    - India
+    - APAC
+
+pay:
+  min_usd: 110000
+  max_usd: 160000
+  currency: USD
+  period: year
+  require_listed_salary: false
+  # Hide if the posted max is at or below min_usd + this amount.
+  min_max_buffer_usd: 10000
+
+# 0 = no age filter. Uses posted date, or last-updated if posted is missing.
+# recency_bonus is the score added for a posting from today; it decays to 0 at max_age_days.
+freshness:
+  max_age_days: 21
+  hide_unknown_date: false
+  recency_bonus: 20
+
+skills:
+  required: []
+  preferred:
+    - React
+    - TypeScript
+    - Next.js
+    - JavaScript
+    - Node.js
+    - Tailwind
+    - SQL
+    - HTML
+    - CSS
+  bonus:
+    - AWS
+    - Docker
+    - C#
+    - PHP
+    - Electron
+    - Figma
+    - WordPress
+  aliases:
+    react:
+      - react
+      - react.js
+      - reactjs
+    nextjs:
+      - next.js
+      - nextjs
+      - next
+    typescript:
+      - typescript
+      - ts
+    nodejs:
+      - node
+      - node.js
+      - nodejs
+    csharp:
+      - c#
+      - csharp
+      - ".net"
+      - asp.net
+  min_preferred_hits: 2
+
+# Preference, not a hard filter (most "Software Engineer" posts omit level).
+# Higher numbers rank first. A list also works: first item = highest rank.
+seniority:
+  prefer:
+    mid: 3
+    mid-senior: 3
+    unleveled: 2
+    senior: 1
+  require_in_title: false
+  exclude:
+    - intern
+    - junior
+    - staff
+    - principal
+    - distinguished
+  aliases:
+    mid:
+      - mid
+      - mid-level
+      - midlevel
+      - mid level
+      - intermediate
+    senior:
+      - senior
+      - sr
+      - sr.
+    mid-senior:
+      - mid-senior
+      - mid senior
+      - midsenior
+
+ingest:
+  providers:
+    - greenhouse
+    - lever
+    - ashby
+  csv_path: datasets/lastroundai-ats-company-directory-2026-08.csv
+  # Feashliaa/job-board-aggregator slug lists (CC BY-NC 4.0, personal use)
+  aggregator_json:
+    greenhouse: datasets/greenhouse_companies.json
+    lever: datasets/lever_companies.json
+    ashby: datasets/ashby_companies.json
+  polite_delay_ms: 300
+  concurrency: 6
+  user_agent: jb-personal-job-search/0.1
+
+# Common Crawl CDX — discovers new board slugs, not live job text.
+# Be polite; the index server asks not to be hammered.
+harvest:
+  cdx_delay_ms: 1500
+  max_pages: 5
