@@ -1,0 +1,425 @@
+{
+  "offers": [
+    {
+      "country": "Nederland",
+      "department": "Product",
+      "position": 149,
+      "max_hours_per_week": null,
+      "open_questions": [
+        {
+          "id": 4301277,
+          "position": 1,
+          "options": {},
+          "required": true,
+          "body": "Are you currently based in The Netherlands or is your move already arranged and the date set? We will unfortunately not support relocation.",
+          "kind": "boolean",
+          "translations": {
+            "en": {
+              "body": "Are you currently based in The Netherlands or is your move already arranged and the date set? We will unfortunately not support relocation."
+            }
+          },
+          "open_question_options": []
+        },
+        {
+          "id": 4301266,
+          "position": 2,
+          "options": {},
+          "required": true,
+          "body": "Will you need (extension of) work permit sponsorship? We can offer this, but only in case you already live in The Netherlands.",
+          "kind": "boolean",
+          "translations": {
+            "en": {
+              "body": "Will you need (extension of) work permit sponsorship? We can offer this, but only in case you already live in The Netherlands."
+            }
+          },
+          "open_question_options": []
+        },
+        {
+          "id": 4301280,
+          "position": 3,
+          "options": {},
+          "required": true,
+          "body": "We offer hybrid working, but would expect at least 3 days a week on-site presence at our office in Nijverdal. Is this possible for you? It's advised to check commuting options beforehand. ",
+          "kind": "boolean",
+          "translations": {
+            "en": {
+              "body": "We offer hybrid working, but would expect at least 3 days a week on-site presence at our office in Nijverdal. Is this possible for you? It's advised to check commuting options beforehand. "
+            }
+          },
+          "open_question_options": []
+        }
+      ],
+      "guid": "d4reo",
+      "max_hours": null,
+      "locations_question_required": true,
+      "on_site": true,
+      "options_salutation": "off",
+      "cover_image": null,
+      "country_code": "NL",
+      "highlight": null,
+      "location": "zwolle, Overijssel, Nederland",
+      "location_question_visible": false,
+      "min_hours": null,
+      "dynamic_fields": [],
+      "mailbox_email": "job.d4reo@12build.recruitee.com",
+      "updated_at": "2026-09-10 10:22:54 UTC",
+      "min_hours_per_week": null,
+      "education_code": "bachelor_degree",
+      "sharing_description": "12Build is a construction procurement platform connecting general contractors, subcontractors, and suppliers across the Netherlands, Belgium, Germany, and Denmark. We manage the full procurement workf",
+      "options_cover_letter": "optional",
+      "postal_code": "8021EW",
+      "published_at": "2026-08-28 11:09:19 UTC",
+      "sharing_title": "Sr. International Marketing manager",
+      "translations": {
+        "en": {
+          "description": "<p><span style=\"color:#000000\">12Build is a construction procurement platform connecting general contractors, subcontractors, and suppliers across the Netherlands, Belgium, Germany, and Denmark. We manage the full procurement workflow, from tender to subcontractor selection, and we compete on network depth: the more of the construction chain that runs through 12Build, the harder our position is to replicate.</span></p><p style=\"min-height: 1.7em;\"></p><p><span style=\"color:#000000\">Our core markets are the Netherlands and Belgium, and we're actively expanding into Germany and Denmark. That expansion is where this role comes in.</span></p><p style=\"min-height: 1.7em;\"></p><h4><span style=\"col",
+          "title": "Sr. International Marketing manager",
+          "highlight": null,
+          "requirements": "<p style=\"min-height: 1.7em;\"></p><p><strong><span style=\"color:#000000\">Must-have</span></strong></p><ul><li><p><span style=\"color:#000000\">5–7 years in B2B marketing with a track record in localization, regional marketing, or international market development.</span></p></li><li><p><span style=\"color:#000000\">Deep cultural fluency in at least two of our growth markets (Belgium, Germany, Denmark), with working English plus at least one of German or Danish. Dutch is a pré.</span></p></li><li><p><span style=\"color:#000000\">A demonstrated ability to adapt product marketing and go-to-market plans for regional audiences — not just translate them.</span></p></li><li><p><span style=\"color:#000000\">",
+          "sharing_image": "https://recruitee-main.s3.eu-central-1.amazonaws.com/offers/2725920/normal_sharing_mgf3y69vs244.jpg",
+          "sharing_title": "Sr. International Marketing manager",
+          "sharing_description": "12Build is a construction procurement platform connecting general contractors, subcontractors, and suppliers across the Netherlands, Belgium, Germany, and Denmark. We manage the full procurement workf",
+          "locations_question": "What is your preferred work location?"
+        }
+      },
+      "careers_apply_url": "https://12build.recruitee.com/o/sr-international-marketing-manager/c/new",
+      "sharing_image": "https://recruitee-main.s3.eu-central-1.amazonaws.com/offers/2725920/normal_sharing_mgf3y69vs244.jpg",
+      "salary": {
+        "max": null,
+        "min": null,
+        "period": "month",
+        "currency": "EUR"
+      },
+      "description": "<p><span style=\"color:#000000\">12Build is a construction procurement platform connecting general contractors, subcontractors, and suppliers across the Netherlands, Belgium, Germany, and Denmark. We manage the full procurement workflow, from tender to subcontractor selection, and we compete on network depth: the more of the construction chain that runs through 12Build, the harder our position is to replicate.</span></p><p style=\"min-height: 1.7em;\"></p><p><span style=\"color:#000000\">Our core markets are the Netherlands and Belgium, and we're actively expanding into Germany and Denmark. That expansion is where this role comes in.</span></p><p style=\"min-height: 1.7em;\"></p><h4><span style=\"col",
+      "options_title": "off",
+      "locations": [
+        {
+          "id": 12675,
+          "name": "Nijverdal",
+          "state": "Overijssel",
+          "country": "Netherlands",
+          "city": "Nijverdal",
+          "translations": {
+            "en": {
+              "name": "Nijverdal",
+              "city": "Nijverdal",
+              "postal_code": "7442DL",
+              "street": null,
+              "note": null
+            }
+          },
+          "country_code": "NL",
+          "state_code": "OV",
+          "postal_code": "7442DL",
+          "street": null,
+          "note": null
+        }
+      ],
+      "options_cv": "required",
+      "remote": false,
+      "state_code": "OV",
+      "category_code": "internet",
+      "hybrid": true,
+      "city": "zwolle",
+      "locations_question": "What is your preferred work location?",
+      "id": 2725920,
+      "slug": "sr-international-marketing-manager",
+      "state_name": "Overijssel",
+      "requirements": "<p style=\"min-height: 1.7em;\"></p><p><strong><span style=\"color:#000000\">Must-have</span></strong></p><ul><li><p><span style=\"color:#000000\">5–7 years in B2B marketing with a track record in localization, regional marketing, or international market development.</span></p></li><li><p><span style=\"color:#000000\">Deep cultural fluency in at least two of our growth markets (Belgium, Germany, Denmark), with working English plus at least one of German or Danish. Dutch is a pré.</span></p></li><li><p><span style=\"color:#000000\">A demonstrated ability to adapt product marketing and go-to-market plans for regional audiences — not just translate them.</span></p></li><li><p><span style=\"color:#000000\">",
+      "close_at": null,
+      "locations_question_type": "multiple_choice",
+      "created_at": "2026-08-28 11:07:23 UTC",
+      "company_name": "12Build",
+      "title": "Sr. International Marketing manager",
+      "options_phone": "required",
+      "careers_url": "https://12build.recruitee.com/o/sr-international-marketing-manager",
+      "status": "published",
+      "experience_code": "experienced",
+      "employment_type_code": "fulltime_fixed_term",
+      "options_photo": "off",
+      "tags": [
+        "marketing"
+      ]
+    },
+    {
+      "country": "Nederland",
+      "department": "Operations",
+      "position": 146,
+      "max_hours_per_week": "40",
+      "open_questions": [],
+      "guid": "wherb",
+      "max_hours": 40,
+      "locations_question_required": true,
+      "on_site": true,
+      "options_salutation": "off",
+      "cover_image": {
+        "url": "https://careers.recruiteecdn.com/image/upload/ats-production/offers/2694504/offer_cover_image_c62v31ofhn74.jpg"
+      },
+      "country_code": "NL",
+      "highlight": "<p><strong>Wij zijn team Operations van 12Build en wij zoeken een RevOps Manager&nbsp;die ons helpt de volgende stap te nemen bij onze Europese expansie. Onderdeel zijn van ons avontuur? Lees dan snel verder. </strong></p>",
+      "location": "Nijverdal, Overijssel, Nederland",
+      "location_question_visible": false,
+      "min_hours": 32,
+      "dynamic_fields": [],
+      "mailbox_email": "job.wherb@12build.recruitee.com",
+      "updated_at": "2026-09-23 10:24:42 UTC",
+      "min_hours_per_week": "32",
+      "education_code": "bachelor_degree",
+      "sharing_description": "Wij zijn team Operations van 12Build en wij zoeken een Revenue Operations Manager die ons helpt de volgende stap te nemen bij onze Europese expansie. Ben jij op zoek naar een job met groeimogelijkhede",
+      "options_cover_letter": "optional",
+      "postal_code": "7442 DL",
+      "published_at": "2026-08-05 13:17:11 UTC",
+      "sharing_title": "Revenue Operations Specialist",
+      "translations": {
+        "en": {
+          "description": "<p><strong>We are the Operations team of 12Build and we are looking for a Revenue Operations Manager to help us take the next step in our European expansion. Are you looking for a job with growth opportunities in an enthusiastic team? Then read on!</strong><br></p><p><strong>Why this vacancy?</strong></p><p>In the past year, we have made a major professionalization effort:</p><ul><li><p>We have said goodbye to self-built tools for subscription management.</p></li><li><p>Sales and Marketing have been working together in our CRM for some time now.</p></li><li><p>Our Customer Success platform has been further set up to automate CS's activities as much as possible.</p></li><li><p>The customer li",
+          "title": "Revenue Operations Manager",
+          "highlight": "<p>Revenue Operations Manager / Revops wanted to help us with our European expansion!</p>",
+          "requirements": "<p><strong>What do you expect from me?</strong></p><p>Below are all kinds of things that we would like to see in the ideal candidate. But even if there is something that you are not familiar with yet, we would like to get to know you!</p><ul><li><p>You have experience with CRM software (preferably HubSpot), marketing automation tools and data visualization programs or you want to quickly master them.</p></li><li><p>You have experience in a similar role, such as application manager, information analyst or an Operations role, preferably in a B2B SaaS environment.</p></li><li><p>You have experience with process automation and project management.</p></li><li><p>Analyzing data is one of your stre",
+          "sharing_image": "https://recruitee-main.s3.eu-central-1.amazonaws.com/offers/2694504/normal_sharing_thynwvyyp5wu.jpg",
+          "sharing_title": "Revenue Operations Specialist",
+          "sharing_description": "We are the Operations team of 12Build and we are looking for a Revenue Operations Manager to help us take the next step in our European expansion. Are you looking for a job with growth opportunities i",
+          "locations_question": "Welke werklocatie heeft je voorkeur?"
+        },
+        "nl": {
+          "description": "<p><strong>Wij zijn team Operations van 12Build en wij zoeken een Revenue Operations Manager&nbsp;die ons helpt de volgende stap te nemen bij onze Europese expansie. Ben jij op zoek naar een job met groeimogelijkheden in&nbsp;een enthousiast team?&nbsp;Lees dan snel verder!</strong></p><p style=\"min-height: 1.7em;\"></p><p><strong>Waarom deze vacature?</strong><br>Het afgelopen jaar hebben wij een grote professionaliseringsslag doorgevoerd:&nbsp;</p><ul><li><p>We hebben afscheid genomen van zelfgebouwde tooling voor abonnementenbeheer. </p></li><li><p>Sales, Customer Success, Support en Marketing werken sinds een tijdje samen in ons CRM.</p></li><li><p>Ons Ops team is druk bezig met zoveel mo",
+          "title": "Revenue Operations Manager",
+          "highlight": "<p><strong>Wij zijn team Operations van 12Build en wij zoeken een RevOps Manager&nbsp;die ons helpt de volgende stap te nemen bij onze Europese expansie. Onderdeel zijn van ons avontuur? Lees dan snel verder. </strong></p>",
+          "requirements": "<p><strong>Wat verwachten jullie van mij dan?</strong></p><p>Hieronder staan allerlei dingen die wij graag terugzien bij de ideale kandidaat. Maar ook als er iets tussen staat waar je nog geen kaas van hebt gegeten, maken we graag kennis!</p><p style=\"min-height: 1.7em;\"></p><ul><li><p>Je hebt ervaring met CRM-software (bij voorkeur HubSpot), marketing automation tools en datavisualisatieprogramma’s of je wilt je dat snel eigen maken.</p></li><li><p>Je hebt ervaring in een vergelijkbare rol, zoals informatieanalist of een Operations-rol, bij voorkeur in een B2B SaaS-omgeving. </p></li><li><p>Je hebt ervaring met procesautomatisering en projectleiding.</p></li><li><p>Het analyseren van data i",
+          "sharing_image": "https://recruitee-main.s3.eu-central-1.amazonaws.com/offers/2694504/normal_sharing_thynwvyyp5wu.jpg",
+          "sharing_title": "Revenue Operations Specialist",
+          "sharing_description": "Wij zijn team Operations van 12Build en wij zoeken een Revenue Operations Manager die ons helpt de volgende stap te nemen bij onze Europese expansie. Ben jij op zoek naar een job met groeimogelijkhede",
+          "locations_question": "Welke werklocatie heeft je voorkeur?"
+        }
+      },
+      "careers_apply_url": "https://12build.recruitee.com/o/revenue-operations-manager-1/c/new",
+      "sharing_image": "https://recruitee-main.s3.eu-central-1.amazonaws.com/offers/2694504/normal_sharing_thynwvyyp5wu.jpg",
+      "salary": {
+        "max": "5500",
+        "min": "4500",
+        "period": "month",
+        "currency": "EUR"
+      },
+      "description": "<p><strong>Wij zijn team Operations van 12Build en wij zoeken een Revenue Operations Manager&nbsp;die ons helpt de volgende stap te nemen bij onze Europese expansie. Ben jij op zoek naar een job met groeimogelijkheden in&nbsp;een enthousiast team?&nbsp;Lees dan snel verder!</strong></p><p style=\"min-height: 1.7em;\"></p><p><strong>Waarom deze vacature?</strong><br>Het afgelopen jaar hebben wij een grote professionaliseringsslag doorgevoerd:&nbsp;</p><ul><li><p>We hebben afscheid genomen van zelfgebouwde tooling voor abonnementenbeheer. </p></li><li><p>Sales, Customer Success, Support en Marketing werken sinds een tijdje samen in ons CRM.</p></li><li><p>Ons Ops team is druk bezig met zoveel mo",
+      "options_title": "off",
+      "locations": [
+        {
+          "id": 12668,
+          "name": "Nijverdal, 7442 DL",
+          "state": "Overijssel",
+          "country": "Nederland",
+          "city": "Nijverdal",
+          "translations": {
+            "en": {
+              "name": "Nijverdal, 7442 DL",
+              "city": "Nijverdal",
+              "postal_code": "7442 DL",
+              "street": null,
+              "note": null
+            },
+            "nl": {
+              "name": "Nijverdal, 7442 DL",
+              "city": "Nijverdal",
+              "postal_code": "7442 DL",
+              "street": null,
+              "note": null
+            }
+          },
+          "country_code": "NL",
+          "state_code": "OV",
+          "postal_code": "7442 DL",
+          "street": null,
+          "note": null
+        }
+      ],
+      "options_cv": "required",
+      "remote": false,
+      "state_code": "OV",
+      "category_code": "internet",
+      "hybrid": true,
+      "city": "Nijverdal",
+      "locations_question": "Welke werklocatie heeft je voorkeur?",
+      "id": 2694504,
+      "slug": "revenue-operations-manager-1",
+      "state_name": "Overijssel",
+      "requirements": "<p><strong>Wat verwachten jullie van mij dan?</strong></p><p>Hieronder staan allerlei dingen die wij graag terugzien bij de ideale kandidaat. Maar ook als er iets tussen staat waar je nog geen kaas van hebt gegeten, maken we graag kennis!</p><p style=\"min-height: 1.7em;\"></p><ul><li><p>Je hebt ervaring met CRM-software (bij voorkeur HubSpot), marketing automation tools en datavisualisatieprogramma’s of je wilt je dat snel eigen maken.</p></li><li><p>Je hebt ervaring in een vergelijkbare rol, zoals informatieanalist of een Operations-rol, bij voorkeur in een B2B SaaS-omgeving. </p></li><li><p>Je hebt ervaring met procesautomatisering en projectleiding.</p></li><li><p>Het analyseren van data i",
+      "close_at": null,
+      "locations_question_type": "multiple_choice",
+      "created_at": "2026-07-30 06:51:18 UTC",
+      "company_name": "12Build",
+      "title": "Revenue Operations Manager",
+      "options_phone": "required",
+      "careers_url": "https://12build.recruitee.com/o/revenue-operations-manager-1",
+      "status": "published",
+      "experience_code": "mid_level",
+      "employment_type_code": "fulltime_permanent",
+      "options_photo": "off",
+      "tags": []
+    },
+    {
+      "country": "Nederland",
+      "department": "Data",
+      "position": 142,
+      "max_hours_per_week": "40",
+      "open_questions": [
+        {
+          "id": 4301277,
+          "position": 1,
+          "options": {},
+          "required": true,
+          "body": "Are you currently based in The Netherlands or is your move already arranged and the date set? We will unfortunately not support relocation.",
+          "kind": "boolean",
+          "translations": {
+            "en": {
+              "body": "Are you currently based in The Netherlands or is your move already arranged and the date set? We will unfortunately not support relocation."
+            },
+            "nl": {
+              "body": "Are you currently based in The Netherlands or is your move already arranged and the date set? We will unfortunately not support relocation."
+            }
+          },
+          "open_question_options": []
+        },
+        {
+          "id": 4301266,
+          "position": 2,
+          "options": {},
+          "required": true,
+          "body": "Will you need (extension of) work permit sponsorship? We can offer this, but only in case you already live in The Netherlands.",
+          "kind": "boolean",
+          "translations": {
+            "en": {
+              "body": "Will you need (extension of) work permit sponsorship? We can offer this, but only in case you already live in The Netherlands."
+            },
+            "nl": {
+              "body": "Will you need (extension of) work permit sponsorship? We can offer this, but only in case you already live in The Netherlands."
+            }
+          },
+          "open_question_options": []
+        },
+        {
+          "id": 4301280,
+          "position": 3,
+          "options": {},
+          "required": true,
+          "body": "We offer hybrid working, but would expect at least 3 days a week on-site presence at our office in Nijverdal. Is this possible for you? It's advised to check commuting options beforehand. ",
+          "kind": "boolean",
+          "translations": {
+            "en": {
+              "body": "We offer hybrid working, but would expect at least 3 days a week on-site presence at our office in Nijverdal. Is this possible for you? It's advised to check commuting options beforehand. "
+            },
+            "nl": {
+              "body": "We offer hybrid working, but would expect at least 3 days a week on-site presence at our office in Nijverdal. Is this possible for you? It's advised to check commuting options beforehand. "
+            }
+          },
+          "open_question_options": []
+        }
+      ],
+      "guid": "n8ebw",
+      "max_hours": 40,
+      "locations_question_required": true,
+      "on_site": true,
+      "options_salutation": "off",
+      "cover_image": null,
+      "country_code": "NL",
+      "highlight": "<p><strong>Bouw jij als Senior AI Engineer de gedeelde AI-architectuur voor 12Build? Breng geavanceerde RAG-systemen &amp; multi-model routing in productie en transformeer ons platform!</strong></p>",
+      "location": "Nijverdal, Overijssel, Nederland",
+      "location_question_visible": false,
+      "min_hours": 32,
+      "dynamic_fields": [],
+      "mailbox_email": "job.n8ebw@12build.recruitee.com",
+      "updated_at": "2026-09-18 12:30:28 UTC",
+      "min_hours_per_week": "32",
+      "education_code": "bachelor_degree",
+      "sharing_description": "Wil jij jouw engineering skills inzetten om AI-services te bouwen die échte klantwaarde leveren? Ben je een strategische visionair met een passie voor LLMOps, bezit je ijzersterke architecturale vaard",
+      "options_cover_letter": "optional",
+      "postal_code": "7442 DL",
+      "published_at": "2026-06-23 08:03:54 UTC",
+      "sharing_title": "AI Engineer",
+      "translations": {
+        "en": {
+          "description": "<p><strong>Ready to leverage your engineering skills to build AI services that deliver real customer value? Are you a strategic visionary with a passion for LLMOps, equipped with rock-solid architectural skills, and eager to be the technical anchor of our AI practice? Do you thrive when taking full ownership and leadership in your work? If so, we are looking for you!</strong></p><p style=\"min-height: 1.7em;\"></p><p><strong>Your Part of the Adventure</strong></p><p>We are transforming the way the construction industry operates by integrating GenAI into our platform. As a Senior AI Engineer, you will join the Data Insights team and report directly to the Head of Data. You will be the architect",
+          "title": "AI Engineer",
+          "highlight": "<p>Ready to architect the shared AI infrastructure for 12Build as our Senior AI Engineer? Deploy advanced RAG systems &amp; multi-model routing to transform our platform!</p>",
+          "requirements": "<p><strong>What We Expect from You</strong></p><ul><li><p><strong>Experience &amp; Vision:</strong> An experienced AI / Software Engineer with a clear, multi-year vision for scaling and industrializing AI infrastructures. This is combined with a minimum of a Bachelor's or Master's degree (HBO/WO) working and thinking level.</p></li><li><p><strong>Tech Skills:</strong> Deep experience with Python, Databricks, PySpark, and setting up, orchestrating, and monitoring AI-related services in production environments.</p></li><li><p><strong>Technical Leader:</strong> You are decisive in your field and dare to take full technical responsibility.</p></li><li><p><strong>SaaS Experience:</strong> A minim",
+          "sharing_image": "https://recruitee-main.s3.eu-central-1.amazonaws.com/offers/2650472/normal_sharing_mgf3y69vs244.jpg",
+          "sharing_title": "AI Engineer",
+          "sharing_description": "Ready to leverage your engineering skills to build AI services that deliver real customer value? Are you a strategic visionary with a passion for LLMOps, equipped with rock-solid architectural skills,",
+          "locations_question": "What is your preferred work location?"
+        },
+        "nl": {
+          "description": "<p><strong>Wil jij jouw engineering skills inzetten om AI-services te bouwen die échte klantwaarde leveren? Ben je een strategische visionair met een passie voor LLMOps, bezit je ijzersterke architecturale vaardigheden en wil je het technische anker zijn van onze AI-praktijk? En neem je graag volledig eigenaarschap en leiderschap in je werk? Dan zijn we op zoek naar jou!</strong></p><p style=\"min-height: 1.7em;\"></p><p><strong>Jouw bijdrage aan het avontuur</strong></p><p>We transformeren de manier waarop de bouwsector werkt door GenAI in ons platform te integreren. Als Senior AI Engineer val je binnen het team Data Insights en rapporteer je rechtstreeks aan de Head of Data. Jij bent de arch",
+          "title": "AI Engineer",
+          "highlight": "<p><strong>Bouw jij als Senior AI Engineer de gedeelde AI-architectuur voor 12Build? Breng geavanceerde RAG-systemen &amp; multi-model routing in productie en transformeer ons platform!</strong></p>",
+          "requirements": "<p><strong>Wat verwachten we van jou?</strong></p><ul><li><p><strong>Ervaring &amp; Visie:</strong> Een ervaren AI / Software Engineer met een duidelijke, meerjarige visie op het schalen en industrialiseren van AI-infrastructuren. Dit combineer je met minimaal HBO/WO werk- en denkniveau.</p></li><li><p><strong>Tech Skills:</strong> Diepgaande ervaring met Python, Databricks, PySpark en het opzetten, orchestreren en monitoren van AI gerelateerde diensten in productieomgevingen.</p></li><li><p><strong>Technisch Leider:</strong> Je bent besluitvaardig op het gebied en durft op technisch gebied verantwoordelijkheid te dragen.</p></li><li><p><strong>SaaS Ervaring:</strong> Minimaal 5 jaar relevan",
+          "sharing_image": "https://recruitee-main.s3.eu-central-1.amazonaws.com/offers/2650472/normal_sharing_mgf3y69vs244.jpg",
+          "sharing_title": "AI Engineer",
+          "sharing_description": "Wil jij jouw engineering skills inzetten om AI-services te bouwen die échte klantwaarde leveren? Ben je een strategische visionair met een passie voor LLMOps, bezit je ijzersterke architecturale vaard",
+          "locations_question": "What is your preferred work location?"
+        }
+      },
+      "careers_apply_url": "https://12build.recruitee.com/o/ai-engineer/c/new",
+      "sharing_image": "https://recruitee-main.s3.eu-central-1.amazonaws.com/offers/2650472/normal_sharing_mgf3y69vs244.jpg",
+      "salary": {
+        "max": "6800",
+        "min": "5800",
+        "period": "month",
+        "currency": "EUR"
+      },
+      "description": "<p><strong>Wil jij jouw engineering skills inzetten om AI-services te bouwen die échte klantwaarde leveren? Ben je een strategische visionair met een passie voor LLMOps, bezit je ijzersterke architecturale vaardigheden en wil je het technische anker zijn van onze AI-praktijk? En neem je graag volledig eigenaarschap en leiderschap in je werk? Dan zijn we op zoek naar jou!</strong></p><p style=\"min-height: 1.7em;\"></p><p><strong>Jouw bijdrage aan het avontuur</strong></p><p>We transformeren de manier waarop de bouwsector werkt door GenAI in ons platform te integreren. Als Senior AI Engineer val je binnen het team Data Insights en rapporteer je rechtstreeks aan de Head of Data. Jij bent de arch",
+      "options_title": "off",
+      "locations": [
+        {
+          "id": 12668,
+          "name": "Nijverdal, 7442 DL",
+          "state": "Overijssel",
+          "country": "Netherlands",
+          "city": "Nijverdal",
+          "translations": {
+            "en": {
+              "name": "Nijverdal, 7442 DL",
+              "city": "Nijverdal",
+              "postal_code": "7442 DL",
+              "street": null,
+              "note": null
+            },
+            "nl": {
+              "name": "Nijverdal, 7442 DL",
+              "city": "Nijverdal",
+              "postal_code": "7442 DL",
+              "street": null,
+              "note": null
+            }
+          },
+          "country_code": "NL",
+          "state_code": "OV",
+          "postal_code": "7442 DL",
+          "street": null,
+          "note": null
+        }
+      ],
+      "options_cv": "required",
+      "remote": false,
+      "state_code": "OV",
+      "category_code": "internet",
+      "hybrid": true,
+      "city": "Nijverdal",
+      "locations_question": "What is your preferred work location?",
+      "id": 2650472,
+      "slug": "ai-engineer",
+      "state_name": "Overijssel",
+      "requirements": "<p><strong>Wat verwachten we van jou?</strong></p><ul><li><p><strong>Ervaring &amp; Visie:</strong> Een ervaren AI / Software Engineer met een duidelijke, meerjarige visie op het schalen en industrialiseren van AI-infrastructuren. Dit combineer je met minimaal HBO/WO werk- en denkniveau.</p></li><li><p><strong>Tech Skills:</strong> Diepgaande ervaring met Python, Databricks, PySpark en het opzetten, orchestreren en monitoren van AI gerelateerde diensten in productieomgevingen.</p></li><li><p><strong>Technisch Leider:</strong> Je bent besluitvaardig op het gebied en durft op technisch gebied verantwoordelijkheid te dragen.</p></li><li><p><strong>SaaS Ervaring:</strong> Minimaal 5 jaar relevan",
+      "close_at": null,
+      "locations_question_type": "multiple_choice",
+      "created_at": "2026-06-23 07:36:03 UTC",
+      "company_name": "12Build",
+      "title": "AI Engineer",
+      "options_phone": "required",
+      "careers_url": "https://12build.recruitee.com/o/ai-engineer",
+      "status": "published",
+      "experience_code": "experienced",
+      "employment_type_code": "fulltime_fixed_term",
+      "options_photo": "off",
+      "tags": []
+    }
+  ]
+}

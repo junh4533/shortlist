@@ -35,22 +35,10 @@ export const DATASETS: DatasetEntry[] = [
     verified: true,
     note: "Slugs were normalized and merged with other sources.",
   },
-  {
-    id: "feashliaa",
-    name: "Feashliaa job-board-aggregator active companies",
-    homepage: "https://github.com/Feashliaa/job-board-aggregator",
-    url: "https://github.com/Feashliaa/job-board-aggregator/releases/latest/download/active_companies.json",
-    license: "MIT",
-    licenseUrl: "https://github.com/Feashliaa/job-board-aggregator/blob/main/LICENSE",
-    usage: "slugs",
-    attributionRequired: false,
-    dest: "datasets/feashliaa_active_companies.json",
-    verified: true,
-  },
-  ...(["greenhouse", "lever", "ashby"] as const).map(
+  ...(["greenhouse", "lever", "ashby", "bamboohr"] as const).map(
     (provider): DatasetEntry => ({
-      id: `feashliaa-legacy-${provider}`,
-      name: `Feashliaa job-board-aggregator ${provider} slug list (legacy)`,
+      id: `feashliaa-${provider}`,
+      name: `Feashliaa job-board-aggregator ${provider} slug list`,
       homepage: "https://github.com/Feashliaa/job-board-aggregator",
       url: `https://raw.githubusercontent.com/Feashliaa/job-board-aggregator/main/data/${provider}_companies.json`,
       license: "MIT",
@@ -58,8 +46,8 @@ export const DATASETS: DatasetEntry[] = [
       usage: "slugs",
       attributionRequired: false,
       dest: `datasets/${provider}_companies.json`,
-      verified: false,
-      note: "Older copies may predate the MIT relicense (previously CC BY-NC 4.0); re-download with --force.",
+      verified: true,
+      note: "Copies downloaded before the MIT relicense (previously CC BY-NC 4.0) should be refreshed with --force.",
     }),
   ),
   {

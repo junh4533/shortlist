@@ -6,6 +6,10 @@ ingest:
     - greenhouse
     - lever
     - ashby
+    - smartrecruiters
+    - workable
+    - recruitee
+    - bamboohr
   polite_delay_ms: 300
   concurrency: 6
   # Add a contact URL or email in parentheses before running the careers crawler.

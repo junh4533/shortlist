@@ -17,7 +17,8 @@
     "backup-db": "tsx scripts/backup-db.ts",
     "migrate-normalize-slugs": "tsx scripts/migrate-normalize-slugs.ts",
     "fetch-datasets": "tsx scripts/fetch-datasets.ts",
-    "db-stats": "tsx scripts/db-stats.ts"
+    "db-stats": "tsx scripts/db-stats.ts",
+    "inspect-dataset": "tsx scripts/inspect-dataset.ts"
   },
   "dependencies": {
     "@libsql/client": "^0.18.0",
@@ -30,6 +31,7 @@
     "zod": "^4.4.3"
   },
   "devDependencies": {
+    "@duckdb/node-api": "^1.5.6-r.1",
     "@rolldown/binding-win32-x64-msvc": "^1.2.11",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^22.20.4",

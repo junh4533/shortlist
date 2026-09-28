@@ -1,0 +1,90 @@
+{
+  "id": "743999796348385",
+  "name": "Business Development Manager, Mobile",
+  "uuid": "8343c3eb-f6d5-4b0d-9c36-8fa00095f6de",
+  "jobId": "26a0d306-6768-46d3-804b-12e4d00fa874",
+  "jobAdId": "16142668-7561-4504-b403-89bbc029b279",
+  "defaultJobAd": true,
+  "refNumber": "REF14W",
+  "company": {
+    "name": "AdGate Media",
+    "identifier": "AdGateMedia"
+  },
+  "location": {
+    "city": "Manhasset",
+    "region": "NY",
+    "country": "us",
+    "address": "1129 Northern Boulevard",
+    "postalCode": "11030",
+    "remote": true,
+    "hybrid": false,
+    "latitude": "40.7904935",
+    "longitude": "-73.7041112",
+    "fullLocation": "Manhasset, NY, United States"
+  },
+  "customField": [
+    {
+      "fieldId": "COUNTRY",
+      "fieldLabel": "Country/Region",
+      "valueId": "us",
+      "valueLabel": "United States"
+    },
+    {
+      "fieldId": "5ade0d24b60a5e7dbb767ac7",
+      "fieldLabel": "Brands",
+      "valueId": "default",
+      "valueLabel": "AdGate Media"
+    }
+  ],
+  "releasedDate": "2022-01-04T17:33:39.000Z",
+  "creator": {
+    "name": "",
+    "avatarUrl": ""
+  },
+  "postingUrl": "https://jobs.smartrecruiters.com/AdGateMedia/743999796348385-business-development-manager-mobile",
+  "applyUrl": "https://jobs.smartrecruiters.com/AdGateMedia/743999796348385-business-development-manager-mobile?oga=true",
+  "referralUrl": "https://jobs.smartrecruiters.com/external-referrals/company/AdGateMedia/publication/8343c3eb-f6d5-4b0d-9c36-8fa00095f6de?dcr_ci=AdGateMedia",
+  "jobAd": {
+    "sections": {
+      "companyDescription": {
+        "title": "Company Description",
+        "text": "<p><strong>About AdGate Media LLC</strong></p><p>AdGate Media is a digital advertising company that connects users of popular websites and apps with premium brands. Our focus is on advertisements that reward users for interaction.</p><p>We are an energetic team that is spread across the globe. We are bootstrapped, profitable, and have been growing YoY for 10 years and counting.</p>"
+      },
+      "jobDescription": {
+        "title": "Job Description",
+        "text": "<p>AdGate Media is looking for a Business Development Manager to head our growing mobile division. Your objective will be to add new mobile app clients as advertisers on the AdGate Media platform.</p><p>This is a newly created role that will be pivotal to the overall growth of the company. Our ideal candidate is independent, proactive, driven, and a strong relationship builder. You will work closely with the executive and account management teams in order to find, close, and build upon potential opportunities. You will need to have a deep understanding of our product offering and value add.</p><p><strong>Key Responsibilities:</strong></p><ul><li>Create and optimize a sales strategy</li><li>R"
+      },
+      "qualifications": {
+        "title": "Qualifications",
+        "text": "<ul><li><strong>MUST BE BASED IN THE US</strong></li><li>2+ years of B2B sales experience</li><li>Bachelor&apos;s Degree</li><li>Quick to pick up and understand new technologies</li><li>Excellent verbal and written communication skills</li><li>Strong understanding of business functions</li><li>Strong organizational skills</li><li>Motivated and self-driven</li><li>BONUS: Experience selling advertising to mobile app developers</li><li>BONUS: Experience with affiliate/performance marketing</li></ul><p> </p>"
+      },
+      "additionalInformation": {
+        "title": "Additional Information",
+        "text": "<p><strong>Perks</strong></p><ul><li>Casual work environment</li><li>Health, Dental, and Vision Insurance</li><li>401k Matching</li><li>Travel opportunities</li><li>Work Remotely</li></ul>"
+      }
+    }
+  },
+  "active": true,
+  "visibility": "PUBLIC",
+  "industry": {
+    "id": "marketing_and_advertising",
+    "label": "Marketing And Advertising"
+  },
+  "function": {
+    "id": "business_development",
+    "label": "Business Development"
+  },
+  "experienceLevel": {
+    "id": "director",
+    "label": "Director"
+  },
+  "typeOfEmployment": {
+    "id": "permanent",
+    "label": "Full-time"
+  },
+  "language": {
+    "code": "en",
+    "label": "English",
+    "labelNative": "English (US)"
+  }
+}

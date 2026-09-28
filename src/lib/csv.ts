@@ -99,10 +99,10 @@ export async function* readAllCompanySources(
     }
   }
   for (const provider of providers) {
-    const filePath = datasetPath(cwd, `feashliaa-legacy-${provider}`);
+    const filePath = datasetPath(cwd, `feashliaa-${provider}`);
     if (!filePath) continue;
     for (const row of readAggregatorJson(filePath, provider)) {
-      yield { ...row, source: "feashliaa-legacy" as const };
+      yield { ...row, source: "feashliaa" as const };
     }
   }
 }

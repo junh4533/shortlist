@@ -1,0 +1,67 @@
+{
+  "meta": {
+    "totalCount": 4
+  },
+  "result": [
+    {
+      "id": "26",
+      "jobOpeningName": "Can't see a role for you? We always want to hear from like-minded people, apply here to keep your CV on file! ",
+      "departmentId": null,
+      "departmentLabel": null,
+      "employmentStatusLabel": "Permanent",
+      "employmentType": null,
+      "location": {
+        "city": "Manchester",
+        "state": "Greater Manchester"
+      },
+      "atsLocation": {
+        "country": null,
+        "state": null,
+        "province": null,
+        "city": null
+      },
+      "isRemote": null,
+      "locationType": "0"
+    },
+    {
+      "id": "108",
+      "jobOpeningName": "Senior Retail Display Installations Project Manager",
+      "departmentId": null,
+      "departmentLabel": null,
+      "employmentStatusLabel": "Permanent",
+      "employmentType": null,
+      "location": {
+        "city": "Manchester",
+        "state": "Greater Manchester"
+      },
+      "atsLocation": {
+        "country": null,
+        "state": null,
+        "province": null,
+        "city": null
+      },
+      "isRemote": null,
+      "locationType": "2"
+    },
+    {
+      "id": "109",
+      "jobOpeningName": "Retail Maintenance Engineer",
+      "departmentId": null,
+      "departmentLabel": null,
+      "employmentStatusLabel": "Permanent",
+      "employmentType": null,
+      "location": {
+        "city": null,
+        "state": null
+      },
+      "atsLocation": {
+        "country": "United Kingdom",
+        "state": null,
+        "province": null,
+        "city": "Bristol"
+      },
+      "isRemote": null,
+      "locationType": "1"
+    }
+  ]
+}

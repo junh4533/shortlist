@@ -1,0 +1,190 @@
+{
+  "offset": 0,
+  "limit": 3,
+  "totalFound": 3,
+  "content": [
+    {
+      "id": "743999796348385",
+      "name": "Business Development Manager, Mobile",
+      "uuid": "8343c3eb-f6d5-4b0d-9c36-8fa00095f6de",
+      "jobAdId": "16142668-7561-4504-b403-89bbc029b279",
+      "defaultJobAd": true,
+      "refNumber": "REF14W",
+      "company": {
+        "identifier": "AdGateMedia",
+        "name": "AdGate Media"
+      },
+      "releasedDate": "2022-01-04T17:33:39.000Z",
+      "location": {
+        "city": "Manhasset",
+        "region": "NY",
+        "country": "us",
+        "address": "1129 Northern Boulevard",
+        "postalCode": "11030",
+        "remote": true,
+        "hybrid": false,
+        "latitude": "40.7904935",
+        "longitude": "-73.7041112",
+        "fullLocation": "Manhasset, NY, United States"
+      },
+      "industry": {
+        "id": "marketing_and_advertising",
+        "label": "Marketing And Advertising"
+      },
+      "department": {},
+      "function": {
+        "id": "business_development",
+        "label": "Business Development"
+      },
+      "typeOfEmployment": {
+        "id": "permanent",
+        "label": "Full-time"
+      },
+      "experienceLevel": {
+        "id": "director",
+        "label": "Director"
+      },
+      "customField": [
+        {
+          "fieldId": "COUNTRY",
+          "fieldLabel": "Country/Region",
+          "valueId": "us",
+          "valueLabel": "United States"
+        },
+        {
+          "fieldId": "5ade0d24b60a5e7dbb767ac7",
+          "fieldLabel": "Brands",
+          "valueId": "default",
+          "valueLabel": "AdGate Media"
+        }
+      ],
+      "visibility": "PUBLIC",
+      "ref": "https://api.smartrecruiters.com/v1/companies/AdGateMedia/postings/743999796348385",
+      "language": {
+        "code": "en",
+        "label": "English",
+        "labelNative": "English (US)"
+      }
+    },
+    {
+      "id": "743999687924224",
+      "name": "Business Developer Manager - APAC",
+      "uuid": "3b5dddd4-10d8-4616-96ba-7840ac389175",
+      "jobAdId": "da3be0f2-50ed-4443-8015-51bfe438518d",
+      "defaultJobAd": true,
+      "refNumber": "REF4Q",
+      "company": {
+        "identifier": "AdGateMedia",
+        "name": "AdGate Media"
+      },
+      "releasedDate": "2019-05-08T18:56:53.000Z",
+      "location": {
+        "city": "Seongnam-si",
+        "country": "kr",
+        "address": "n/a",
+        "remote": false,
+        "hybrid": false,
+        "fullLocation": "Seongnam-si, , Korea, republic of"
+      },
+      "industry": {
+        "id": "marketing_and_advertising",
+        "label": "Marketing And Advertising"
+      },
+      "department": {},
+      "function": {
+        "id": "sales",
+        "label": "Sales"
+      },
+      "typeOfEmployment": {
+        "id": "permanent",
+        "label": "Full-time"
+      },
+      "experienceLevel": {
+        "id": "associate",
+        "label": "Associate"
+      },
+      "customField": [
+        {
+          "fieldId": "COUNTRY",
+          "fieldLabel": "Country/Region",
+          "valueId": "kr",
+          "valueLabel": "Republic of Korea"
+        },
+        {
+          "fieldId": "5ade0d24b60a5e7dbb767ac7",
+          "fieldLabel": "Brands",
+          "valueId": "default",
+          "valueLabel": "AdGate Media"
+        }
+      ],
+      "visibility": "PUBLIC",
+      "ref": "https://api.smartrecruiters.com/v1/companies/AdGateMedia/postings/743999687924224",
+      "language": {
+        "code": "en",
+        "label": "English",
+        "labelNative": "English (US)"
+      }
+    },
+    {
+      "id": "743999669900883",
+      "name": "A/R Manager and Bookkeeper",
+      "uuid": "1765eb9a-0d11-4c0b-8f43-85f378a60e70",
+      "jobAdId": "eb673809-eac0-46f4-b010-1c82573fe2ef",
+      "defaultJobAd": true,
+      "refNumber": "REF3J",
+      "company": {
+        "identifier": "AdGateMedia",
+        "name": "AdGate Media"
+      },
+      "releasedDate": "2018-05-07T20:05:22.000Z",
+      "location": {
+        "city": "New York",
+        "region": "NY",
+        "country": "us",
+        "address": "241 West 37th Street",
+        "postalCode": "10018",
+        "remote": false,
+        "hybrid": false,
+        "fullLocation": "New York, NY, United States"
+      },
+      "industry": {
+        "id": "marketing_and_advertising",
+        "label": "Marketing And Advertising"
+      },
+      "department": {},
+      "function": {
+        "id": "accounting_auditing",
+        "label": "Accounting/Auditing"
+      },
+      "typeOfEmployment": {
+        "id": "part-time",
+        "label": "Part-time"
+      },
+      "experienceLevel": {
+        "id": "associate",
+        "label": "Associate"
+      },
+      "customField": [
+        {
+          "fieldId": "COUNTRY",
+          "fieldLabel": "Country/Region",
+          "valueId": "us",
+          "valueLabel": "United States"
+        },
+        {
+          "fieldId": "5ade0d24b60a5e7dbb767ac7",
+          "fieldLabel": "Brands",
+          "valueId": "default",
+          "valueLabel": "AdGate Media"
+        }
+      ],
+      "visibility": "PUBLIC",
+      "ref": "https://api.smartrecruiters.com/v1/companies/AdGateMedia/postings/743999669900883",
+      "language": {
+        "code": "en",
+        "label": "English",
+        "labelNative": "English (US)"
+      }
+    }
+  ]
+}

@@ -1,0 +1,263 @@
+{
+  "jobs": [
+    {
+      "id": "06a03c08-d247-40bd-8d07-128325a30b12",
+      "title": "Senior Technical Product Manager, Fleet Ops",
+      "department": "Product & Program Management",
+      "team": "Product & Program Management",
+      "employmentType": "FullTime",
+      "location": "Atlanta - Hybrid",
+      "shouldDisplayCompensationOnJobPostings": true,
+      "secondaryLocations": [
+        {
+          "location": "New York City - Hybrid",
+          "address": {
+            "postalAddress": {
+              "addressRegion": "NY",
+              "addressCountry": "US",
+              "addressLocality": "New York City"
+            }
+          }
+        },
+        {
+          "location": "Remote",
+          "address": {
+            "postalAddress": {
+              "addressRegion": "Remote",
+              "addressCountry": "United States",
+              "addressLocality": "Remote"
+            }
+          }
+        },
+        {
+          "location": "United Kingdom (Remote)",
+          "address": {
+            "postalAddress": {
+              "addressCountry": "UK"
+            }
+          }
+        },
+        {
+          "location": "South San Francisco - Hybrid",
+          "address": {
+            "postalAddress": {
+              "addressRegion": "California ",
+              "addressCountry": "US",
+              "addressLocality": "South San Francisco"
+            }
+          }
+        }
+      ],
+      "publishedAt": "2026-09-18T08:20:42.369+00:00",
+      "isListed": true,
+      "isRemote": true,
+      "workplaceType": "Hybrid",
+      "address": {
+        "postalAddress": {
+          "addressRegion": "Georgia",
+          "addressCountry": "US",
+          "addressLocality": "Atlanta"
+        }
+      },
+      "jobUrl": "https://jobs.ashbyhq.com/aerovect/06a03c08-d247-40bd-8d07-128325a30b12",
+      "applyUrl": "https://jobs.ashbyhq.com/aerovect/06a03c08-d247-40bd-8d07-128325a30b12/application",
+      "descriptionHtml": "<h2><strong>Who We Are</strong></h2><p style=\"min-height:1.5em\">AeroVect is transforming ground handling with autonomy, redefining how airlines and ground service providers around the globe run day-to-day operations. We are a Series A company backed by top-tier venture capital investors in aviation and autonomous driving. Our customers include some of the world’s largest airlines and ground handling providers. For more information, visit <a target=\"_blank\" rel=\"noopener noreferrer nofollow\" href=\"http://www.aerovect.com\"><u>www.aerovect.com</u></a>.</p><p style=\"min-height:1.5em\">The Sr. PMT for Fleet Operations is responsible for defining the strategy, roadmap, and development of products t",
+      "descriptionPlain": "WHO WE ARE\n\nAeroVect is transforming ground handling with autonomy, redefining how airlines and ground service providers around the globe run day-to-day operations. We are a Series A company backed by top-tier venture capital investors in aviation and autonomous driving. Our customers include some of the world’s largest airlines and ground handling providers. For more information, visit www.aerovect.com http://www.aerovect.com.\n\nThe Sr. PMT for Fleet Operations is responsible for defining the strategy, roadmap, and development of products that enable AeroVect’s Autonomous Ground Support Equipment (AGSE) vehicles to operate safely and reliably at scale. This role will define and build the rem",
+      "compensation": {
+        "compensationTierSummary": "$150K – $180K • Offers Equity",
+        "scrapeableCompensationSalarySummary": "$150K - $180K",
+        "compensationTiers": [
+          {
+            "id": "bfc38a8c-a1ff-45dc-a140-4e34ec8910a2",
+            "tierSummary": "$150K – $180K • Offers Equity",
+            "title": null,
+            "additionalInformation": null,
+            "components": [
+              {
+                "id": "9e61f04c-905a-4dd5-9e2f-841fad521455",
+                "summary": "$150K – $180K",
+                "compensationType": "Salary",
+                "interval": "1 YEAR",
+                "currencyCode": "USD",
+                "minValue": 150000,
+                "maxValue": 180000
+              },
+              {
+                "id": "da0f26f5-f90b-4c6e-8b81-6dd473780cdd",
+                "summary": "Offers Equity",
+                "compensationType": "EquityPercentage",
+                "interval": "NONE",
+                "currencyCode": null,
+                "minValue": null,
+                "maxValue": null
+              }
+            ]
+          }
+        ],
+        "summaryComponents": [
+          {
+            "compensationType": "Salary",
+            "interval": "1 YEAR",
+            "currencyCode": "USD",
+            "minValue": 150000,
+            "maxValue": 180000
+          },
+          {
+            "compensationType": "EquityPercentage",
+            "interval": "NONE",
+            "currencyCode": null,
+            "minValue": null,
+            "maxValue": null
+          }
+        ]
+      }
+    },
+    {
+      "id": "ce12e13c-cce4-4827-a725-61f7517dfcd6",
+      "title": "Test Driver, Autonomous Vehicles ",
+      "department": "Operations",
+      "team": "Operations",
+      "employmentType": "FullTime",
+      "location": "Atlanta",
+      "shouldDisplayCompensationOnJobPostings": true,
+      "secondaryLocations": [],
+      "publishedAt": "2026-09-21T15:12:36.079+00:00",
+      "isListed": true,
+      "isRemote": null,
+      "workplaceType": null,
+      "address": {
+        "postalAddress": {
+          "addressRegion": "Georgia",
+          "addressCountry": "USA",
+          "addressLocality": "Atlanta"
+        }
+      },
+      "jobUrl": "https://jobs.ashbyhq.com/aerovect/ce12e13c-cce4-4827-a725-61f7517dfcd6",
+      "applyUrl": "https://jobs.ashbyhq.com/aerovect/ce12e13c-cce4-4827-a725-61f7517dfcd6/application",
+      "descriptionHtml": "<h2><strong>Who We Are</strong></h2><p style=\"min-height:1.5em\">AeroVect is transforming ground handling with autonomy, redefining how airlines and ground service providers around the globe run day-to-day operations. We are a Series A company backed by top-tier venture capital investors in aviation and autonomous driving. Our customers include some of the world’s largest airlines and ground handling providers. For more information, visit <a target=\"_blank\" rel=\"noopener noreferrer nofollow\" href=\"http://www.aerovect.com\"><u>www.aerovect.com</u></a>.</p><p style=\"min-height:1.5em\"></p><p style=\"min-height:1.5em\">We are looking for Autonomous Vehicle Operators to join AeroVect’s Atlanta-based ",
+      "descriptionPlain": "WHO WE ARE\n\nAeroVect is transforming ground handling with autonomy, redefining how airlines and ground service providers around the globe run day-to-day operations. We are a Series A company backed by top-tier venture capital investors in aviation and autonomous driving. Our customers include some of the world’s largest airlines and ground handling providers. For more information, visit www.aerovect.com http://www.aerovect.com.\n\n\n\nWe are looking for Autonomous Vehicle Operators to join AeroVect’s Atlanta-based team. In this role, you will be responsible for operating our autonomous airport tractors at Hartsfield-Jackson Atlanta International Airport as they move live cargo across the airfiel",
+      "compensation": {
+        "compensationTierSummary": "$29 – $32 per hour • Offers Equity • 20 Vacation Days • 10 Sick Days",
+        "scrapeableCompensationSalarySummary": null,
+        "compensationTiers": [
+          {
+            "id": "900f327e-4522-48d9-a630-f8f7a74dd18a",
+            "tierSummary": "$29 – $32 per hour • Offers Equity • 20 Vacation Days • 10 Sick Days",
+            "title": null,
+            "additionalInformation": "20 Vacation Days • 10 Sick Days",
+            "components": [
+              {
+                "id": "3bce1ba0-92f7-4344-97b3-ebfdeea2d3b9",
+                "summary": "Offers Equity",
+                "compensationType": "EquityPercentage",
+                "interval": "NONE",
+                "currencyCode": null,
+                "minValue": null,
+                "maxValue": null
+              },
+              {
+                "id": "2e9a6f89-0b7c-4eec-b9b4-8199f5564c9a",
+                "summary": "$29 – $32 per hour",
+                "compensationType": "Salary",
+                "interval": "1 HOUR",
+                "currencyCode": "USD",
+                "minValue": 29,
+                "maxValue": 32
+              }
+            ]
+          }
+        ],
+        "summaryComponents": [
+          {
+            "compensationType": "EquityPercentage",
+            "interval": "NONE",
+            "currencyCode": null,
+            "minValue": null,
+            "maxValue": null
+          },
+          {
+            "compensationType": "Salary",
+            "interval": "1 HOUR",
+            "currencyCode": "USD",
+            "minValue": 29,
+            "maxValue": 32
+          }
+        ]
+      }
+    },
+    {
+      "id": "ecb01f9b-5554-435f-bb89-1caf0ee7e6ad",
+      "title": "Autonomous GSE Operator",
+      "department": "Operations",
+      "team": "Operations",
+      "employmentType": "FullTime",
+      "location": "Atlanta",
+      "shouldDisplayCompensationOnJobPostings": true,
+      "secondaryLocations": [],
+      "publishedAt": "2026-09-21T15:13:02.240+00:00",
+      "isListed": true,
+      "isRemote": null,
+      "workplaceType": null,
+      "address": {
+        "postalAddress": {
+          "addressRegion": "Georgia",
+          "addressCountry": "USA",
+          "addressLocality": "Atlanta"
+        }
+      },
+      "jobUrl": "https://jobs.ashbyhq.com/aerovect/ecb01f9b-5554-435f-bb89-1caf0ee7e6ad",
+      "applyUrl": "https://jobs.ashbyhq.com/aerovect/ecb01f9b-5554-435f-bb89-1caf0ee7e6ad/application",
+      "descriptionHtml": "<h2><strong>Who We Are</strong></h2><p style=\"min-height:1.5em\">AeroVect is transforming ground handling with autonomy, redefining how airlines and ground service providers around the globe run day-to-day operations. We are a Series A company backed by top-tier venture capital investors in aviation and autonomous driving. Our customers include some of the world’s largest airlines and ground handling providers. For more information, visit <a target=\"_blank\" rel=\"noopener noreferrer nofollow\" href=\"http://www.aerovect.com\"><u>www.aerovect.com</u></a>.</p><p style=\"min-height:1.5em\"></p><p style=\"min-height:1.5em\">We are looking for Autonomous Vehicle Operators to join AeroVect’s Atlanta-based ",
+      "descriptionPlain": "WHO WE ARE\n\nAeroVect is transforming ground handling with autonomy, redefining how airlines and ground service providers around the globe run day-to-day operations. We are a Series A company backed by top-tier venture capital investors in aviation and autonomous driving. Our customers include some of the world’s largest airlines and ground handling providers. For more information, visit www.aerovect.com http://www.aerovect.com.\n\n\n\nWe are looking for Autonomous Vehicle Operators to join AeroVect’s Atlanta-based team. In this role, you will be responsible for operating our autonomous airport tractors at Hartsfield-Jackson Atlanta International Airport as they move live cargo across the airfiel",
+      "compensation": {
+        "compensationTierSummary": "$29 – $32 per hour • Offers Equity • 20 Vacation Days • 10 Sick Days",
+        "scrapeableCompensationSalarySummary": null,
+        "compensationTiers": [
+          {
+            "id": "403f1146-9271-4bcf-9409-b58d153fc910",
+            "tierSummary": "$29 – $32 per hour • Offers Equity • 20 Vacation Days • 10 Sick Days",
+            "title": null,
+            "additionalInformation": "20 Vacation Days • 10 Sick Days",
+            "components": [
+              {
+                "id": "808db1fa-901d-4814-a4cb-242b05978a77",
+                "summary": "Offers Equity",
+                "compensationType": "EquityPercentage",
+                "interval": "NONE",
+                "currencyCode": null,
+                "minValue": null,
+                "maxValue": null
+              },
+              {
+                "id": "efb8c8a2-b1b2-4fe9-8dec-960d20f94201",
+                "summary": "$29 – $32 per hour",
+                "compensationType": "Salary",
+                "interval": "1 HOUR",
+                "currencyCode": "USD",
+                "minValue": 29,
+                "maxValue": 32
+              }
+            ]
+          }
+        ],
+        "summaryComponents": [
+          {
+            "compensationType": "EquityPercentage",
+            "interval": "NONE",
+            "currencyCode": null,
+            "minValue": null,
+            "maxValue": null
+          },
+          {
+            "compensationType": "Salary",
+            "interval": "1 HOUR",
+            "currencyCode": "USD",
+            "minValue": 29,
+            "maxValue": 32
+          }
+        ]
+      }
+    }
+  ],
+  "apiVersion": "1"
+}

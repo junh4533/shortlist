@@ -3,8 +3,10 @@ import { and, eq, sql } from "drizzle-orm";
 import {
   loadDefaultPreferences,
   loadSystemConfig,
+  providerLimits,
   type AtsProvider,
 } from "../src/lib/config";
+import { makeTitleAllowlist } from "../src/lib/jobs/store-filter";
 import { readAllCompanySources } from "../src/lib/csv";
 import { getDb, migrate, withBusyRetry } from "../src/lib/db";
 import { companies, jobs } from "../src/lib/db/schema";
@@ -173,13 +175,16 @@ async function ingestBoards() {
   let dead = 0;
   let errors = 0;
   let storedJobs = 0;
+  let processed = 0;
+  const storable = makeTitleAllowlist(config.ingest.store_title_allowlist);
 
-  await mapPool(rows, config.ingest.concurrency, async (company, index) => {
-    const result = await fetchBoard(
-      company.atsProvider as AtsProvider,
-      company.slug,
-      config.ingest.user_agent,
-    );
+  async function processBoard(company: Company) {
+    const provider = company.atsProvider as AtsProvider;
+    const result = await fetchBoard(provider, company.slug, {
+      userAgent: config.ingest.user_agent,
+      withDetails: (title) => !verifyOnly && storable(title),
+      previouslyLive: company.status === "live",
+    });
     const checkedAt = new Date().toISOString();
     const companyWhere = and(
       eq(companies.atsProvider, company.atsProvider),
@@ -215,13 +220,28 @@ async function ingestBoards() {
       });
     }
 
-    if ((index + 1) % 10 === 0 || index + 1 === rows.length) {
+    processed += 1;
+    if (processed % 10 === 0) {
       console.log(
-        `${index + 1}/${rows.length} boards  live=${live} dead=${dead} errors=${errors} jobs=${storedJobs}`,
+        `${processed}/${rows.length} boards  live=${live} dead=${dead} errors=${errors} jobs=${storedJobs}`,
       );
     }
-    await sleep(config.ingest.polite_delay_ms);
-  });
+  }
+
+  const byProvider = new Map<AtsProvider, Company[]>();
+  for (const row of rows) {
+    const provider = row.atsProvider as AtsProvider;
+    byProvider.set(provider, [...(byProvider.get(provider) ?? []), row]);
+  }
+  await Promise.all(
+    [...byProvider].map(([provider, boards]) => {
+      const { concurrency, delayMs } = providerLimits(config, provider);
+      return mapPool(boards, concurrency, async (company) => {
+        await processBoard(company);
+        await sleep(delayMs);
+      });
+    }),
+  );
   console.log(
     `Done: ${rows.length} boards  live=${live} dead=${dead} errors=${errors} jobs=${storedJobs}`,
   );
