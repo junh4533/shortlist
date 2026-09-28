@@ -9,7 +9,7 @@ import {
   harvestPrefix,
   latestCrawl,
 } from "../src/lib/common-crawl";
-import { getDb } from "../src/lib/db";
+import { getDb, migrate } from "../src/lib/db";
 import { companies } from "../src/lib/db/schema";
 
 function argValue(flag: string) {
@@ -87,12 +87,13 @@ async function main() {
     return;
   }
 
-  const { sqlite, db } = getDb();
+  await migrate();
+  const db = getDb();
   let inserted = 0;
   const added: { ats_vendor: string; board_slug: string }[] = [];
 
   for (const row of unique.values()) {
-    const existing = db
+    const [existing] = await db
       .select()
       .from(companies)
       .where(
@@ -101,22 +102,18 @@ async function main() {
           eq(companies.slug, row.slug),
         ),
       )
-      .get();
+      .limit(1);
     if (existing) continue;
-    db.insert(companies)
-      .values({
-        atsProvider: row.atsProvider,
-        slug: row.slug,
-        name: row.slug,
-        status: "unknown",
-        lastCrawled: crawl.id,
-      })
-      .run();
+    await db.insert(companies).values({
+      atsProvider: row.atsProvider,
+      slug: row.slug,
+      name: row.slug,
+      status: "unknown",
+      lastCrawled: crawl.id,
+    });
     inserted += 1;
     added.push({ ats_vendor: row.atsProvider, board_slug: row.slug });
   }
-
-  sqlite.close();
 
   const outPath = path.join(process.cwd(), "datasets", "commoncrawl_new_slugs.json");
   writeFileSync(outPath, `${JSON.stringify({ crawl: crawl.id, added }, null, 2)}\n`);

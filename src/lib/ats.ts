@@ -274,20 +274,4 @@ export async function fetchBoard(
   }
 }
 
-/** Run `concurrency` workers that pull the next item until the list is done (default 6 boards). */
-export async function mapPool<T>(
-  items: T[],
-  concurrency: number,
-  worker: (item: T, index: number) => Promise<void>,
-) {
-  let next = 0;
-  async function run() {
-    while (next < items.length) {
-      const index = next;
-      next += 1;
-      await worker(items[index], index);
-    }
-  }
-  const size = Math.min(concurrency, Math.max(items.length, 1));
-  await Promise.all(Array.from({ length: size }, run));
-}
+export { mapPool } from "./concurrency";

@@ -1,10 +1,23 @@
 /** CLI: delete extra job rows that share the same apply URL (`npm run dedupe-jobs`). */
-import { dedupeJobsByUrl, getDb } from "../src/lib/db";
+import { sql } from "drizzle-orm";
+import { getDb, migrate } from "../src/lib/db";
+import { dedupeJobsByUrl } from "../src/lib/db/dedupe";
 import { jobs } from "../src/lib/db/schema";
 
-const { sqlite, db } = getDb();
-const before = db.select().from(jobs).all().length;
-const removed = dedupeJobsByUrl(sqlite);
-const after = db.select().from(jobs).all().length;
-sqlite.close();
-console.log(`Jobs before ${before}; removed ${removed} duplicate URLs; ${after} remaining`);
+async function countJobs() {
+  const [{ n }] = await getDb().select({ n: sql<number>`count(*)` }).from(jobs);
+  return n;
+}
+
+async function main() {
+  await migrate();
+  const before = await countJobs();
+  const removed = await dedupeJobsByUrl();
+  const after = await countJobs();
+  console.log(`Jobs before ${before}; removed ${removed} duplicate URLs; ${after} remaining`);
+}
+
+main().catch((error) => {
+  console.error(error);
+  process.exit(1);
+});

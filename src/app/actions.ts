@@ -8,7 +8,7 @@ import {
   APPLICATION_STATUSES,
   type ApplicationStatus,
 } from "@/lib/constants";
-import { getDb } from "@/lib/db";
+import { getDb, withBusyRetry } from "@/lib/db";
 import { jobs, jobTracking } from "@/lib/db/schema";
 import { listingCollapseKey } from "@/lib/url";
 
@@ -28,10 +28,11 @@ export async function updateJobStatus(input: {
   const externalId = input.externalId.trim();
   if (!atsProvider || !boardSlug || !externalId) return;
   if (!isStatus(input.status)) return;
+  const status = input.status;
 
-  const { sqlite, db } = getDb();
+  const db = getDb();
   const updatedAt = new Date().toISOString();
-  const source = db
+  const [source] = await db
     .select({
       atsProvider: jobs.atsProvider,
       boardSlug: jobs.boardSlug,
@@ -47,46 +48,49 @@ export async function updateJobStatus(input: {
         eq(jobs.externalId, externalId),
       ),
     )
-    .get();
+    .limit(1);
 
   const targets = source
-    ? db
-        .select({
-          atsProvider: jobs.atsProvider,
-          boardSlug: jobs.boardSlug,
-          externalId: jobs.externalId,
-          title: jobs.title,
-          location: jobs.location,
-        })
-        .from(jobs)
-        .where(
-          and(eq(jobs.atsProvider, source.atsProvider), eq(jobs.title, source.title)),
-        )
-        .all()
-        .filter((row) => listingCollapseKey(row) === listingCollapseKey(source))
+    ? (
+        await db
+          .select({
+            atsProvider: jobs.atsProvider,
+            boardSlug: jobs.boardSlug,
+            externalId: jobs.externalId,
+            title: jobs.title,
+            location: jobs.location,
+          })
+          .from(jobs)
+          .where(
+            and(eq(jobs.atsProvider, source.atsProvider), eq(jobs.title, source.title)),
+          )
+      ).filter((row) => listingCollapseKey(row) === listingCollapseKey(source))
     : [{ atsProvider, boardSlug, externalId }];
 
-  for (const row of targets) {
-    db.insert(jobTracking)
-      .values({
-        atsProvider: row.atsProvider,
-        boardSlug: row.boardSlug,
-        externalId: row.externalId,
-        status: input.status,
-        updatedAt,
-      })
-      .onConflictDoUpdate({
-        target: [
-          jobTracking.atsProvider,
-          jobTracking.boardSlug,
-          jobTracking.externalId,
-        ],
-        set: { status: input.status, updatedAt },
-      })
-      .run();
-  }
+  await withBusyRetry(() =>
+    db.transaction(async (tx) => {
+      for (const row of targets) {
+        await tx
+          .insert(jobTracking)
+          .values({
+            atsProvider: row.atsProvider,
+            boardSlug: row.boardSlug,
+            externalId: row.externalId,
+            status,
+            updatedAt,
+          })
+          .onConflictDoUpdate({
+            target: [
+              jobTracking.atsProvider,
+              jobTracking.boardSlug,
+              jobTracking.externalId,
+            ],
+            set: { status, updatedAt },
+          });
+      }
+    }),
+  );
 
-  sqlite.close();
   revalidatePath("/", "layout");
 }
 
@@ -96,16 +100,16 @@ export async function clearJobStatus(formData: FormData) {
   const externalId = String(formData.get("externalId") ?? "");
   if (!atsProvider || !boardSlug || !externalId) return;
 
-  const { sqlite, db } = getDb();
-  db.delete(jobTracking)
-    .where(
-      and(
-        eq(jobTracking.atsProvider, atsProvider),
-        eq(jobTracking.boardSlug, boardSlug),
-        eq(jobTracking.externalId, externalId),
+  await withBusyRetry(() =>
+    getDb()
+      .delete(jobTracking)
+      .where(
+        and(
+          eq(jobTracking.atsProvider, atsProvider),
+          eq(jobTracking.boardSlug, boardSlug),
+          eq(jobTracking.externalId, externalId),
+        ),
       ),
-    )
-    .run();
-  sqlite.close();
+  );
   revalidatePath("/", "layout");
 }

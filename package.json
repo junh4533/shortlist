@@ -13,12 +13,13 @@
     "import-companies": "tsx scripts/ingest.ts --import-only",
     "harvest-cc": "tsx scripts/harvest-cc.ts",
     "dedupe-jobs": "tsx scripts/dedupe-jobs.ts",
+    "migrate": "tsx scripts/migrate.ts",
     "backup-db": "tsx scripts/backup-db.ts",
     "fetch-datasets": "tsx scripts/fetch-datasets.ts",
     "db-stats": "tsx scripts/db-stats.ts"
   },
   "dependencies": {
-    "better-sqlite3": "^13.0.3",
+    "@libsql/client": "^0.18.0",
     "cheerio": "^1.2.0",
     "drizzle-orm": "^0.45.2",
     "next": "16.3.1",
@@ -30,7 +31,6 @@
   "devDependencies": {
     "@rolldown/binding-win32-x64-msvc": "^1.2.11",
     "@tailwindcss/postcss": "^4",
-    "@types/better-sqlite3": "^9.6.0",
     "@types/node": "^22.20.4",
     "@types/react": "^19",
     "@types/react-dom": "^19",

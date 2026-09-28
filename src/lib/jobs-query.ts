@@ -4,6 +4,7 @@ import {
   APPLICATION_STATUSES,
   type ApplicationStatus,
 } from "./constants";
+import { eq, sql } from "drizzle-orm";
 import { getDb } from "./db";
 import { companies, jobs, jobTracking } from "./db/schema";
 import { matchJob } from "./match";
@@ -225,17 +226,18 @@ export function formatPostedDate(
 }
 
 /** SELECT * jobs, matchJob in JS, then q/status/sort. Not a SQL WHERE from YAML. */
-export function listMatchedJobs(options?: {
+export async function listMatchedJobs(options?: {
   status?: string;
   q?: string;
   sort?: string;
   dir?: string;
-}): ListedJob[] {
+}): Promise<ListedJob[]> {
   const config = loadSearchConfig();
-  const { sqlite, db } = getDb();
-  const rows = db.select().from(jobs).all();
-  const tracking = db.select().from(jobTracking).all();
-  sqlite.close();
+  const db = getDb();
+  const [rows, tracking] = await Promise.all([
+    db.select().from(jobs),
+    db.select().from(jobTracking),
+  ]);
 
   const statusByKey = new Map(
     tracking.map((row) => [
@@ -320,14 +322,14 @@ export function listMatchedJobs(options?: {
   );
 }
 
-export function jobCounts() {
-  const { sqlite, db } = getDb();
-  const jobCount = db.select().from(jobs).all().length;
-  const liveCompanies = db
-    .select()
-    .from(companies)
-    .all()
-    .filter((row) => row.status === "live").length;
-  sqlite.close();
+export async function jobCounts() {
+  const db = getDb();
+  const [[{ jobCount }], [{ liveCompanies }]] = await Promise.all([
+    db.select({ jobCount: sql<number>`count(*)` }).from(jobs),
+    db
+      .select({ liveCompanies: sql<number>`count(*)` })
+      .from(companies)
+      .where(eq(companies.status, "live")),
+  ]);
   return { jobCount, liveCompanies };
 }

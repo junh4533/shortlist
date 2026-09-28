@@ -83,13 +83,15 @@ export default async function Home({
   }>;
 }) {
   const params = await searchParams;
-  const matches = listMatchedJobs({
-    status: params.status,
-    q: params.q,
-    sort: params.sort,
-    dir: params.dir,
-  });
-  const counts = jobCounts();
+  const [matches, counts] = await Promise.all([
+    listMatchedJobs({
+      status: params.status,
+      q: params.q,
+      sort: params.sort,
+      dir: params.dir,
+    }),
+    jobCounts(),
+  ]);
   const currentSort = parseJobSort(params.sort, params.dir);
 
   return (

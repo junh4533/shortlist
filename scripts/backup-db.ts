@@ -1,24 +1,30 @@
-/** CLI: copy data/jobs.db to a timestamped .bak after a WAL checkpoint (`npm run backup-db`). */
+/** CLI: copy the local SQLite file to a timestamped .bak after a WAL checkpoint (`npm run backup-db`). */
 import { copyFileSync, existsSync } from "node:fs";
 import path from "node:path";
-import Database from "better-sqlite3";
+import { dbReady, getClient, localDatabasePath } from "../src/lib/db";
 
-export function backupDb(cwd = process.cwd()) {
-  const source = path.join(cwd, "data", "jobs.db");
-  if (!existsSync(source)) {
-    console.log("No data/jobs.db to back up");
+export async function backupDb() {
+  const source = localDatabasePath();
+  if (!source) {
+    console.log("DATABASE_URL is remote; use your provider's backups instead");
     return null;
   }
-  const sqlite = new Database(source);
-  sqlite.pragma("wal_checkpoint(TRUNCATE)");
-  sqlite.close();
+  if (!existsSync(source)) {
+    console.log(`No ${source} to back up`);
+    return null;
+  }
+  await dbReady();
+  await getClient().execute("PRAGMA wal_checkpoint(TRUNCATE)");
   const stamp = new Date().toISOString().replace(/[:.]/g, "-");
-  const dest = path.join(cwd, "data", `jobs.${stamp}.db.bak`);
+  const dest = path.join(path.dirname(source), `jobs.${stamp}.db.bak`);
   copyFileSync(source, dest);
   console.log(`Backed up to ${dest}`);
   return dest;
 }
 
 if (process.argv[1]?.endsWith("backup-db.ts")) {
-  backupDb();
+  backupDb().catch((error) => {
+    console.error(error);
+    process.exit(1);
+  });
 }
