@@ -103,6 +103,13 @@ export const duplicateOverrides = sqliteTable(
   (table) => [primaryKey({ columns: [table.userId, table.jobKeyA, table.jobKeyB] })],
 );
 
+export const userProfiles = sqliteTable("user_profiles", {
+  userId: text("user_id").primaryKey(),
+  preferences: text("preferences").notNull(),
+  onboarded: integer("onboarded", { mode: "boolean" }).notNull().default(false),
+  updatedAt: text("updated_at").notNull(),
+});
+
 export const jobTracking = sqliteTable(
   "job_tracking",
   {

@@ -14,14 +14,16 @@ import {
   formatPay,
   formatPostedDate,
   jobCounts,
-  listMatchedJobs,
   parseJobSort,
   type JobGroup,
   type JobSortColumn,
   type JobSortDir,
   type ListedJob,
 } from "@/lib/jobs/query";
-import { getUserPreferences } from "@/lib/preferences-store";
+import { redirect } from "next/navigation";
+import type { UserPreferences } from "@/lib/config";
+import { cachedMatchedJobs } from "@/lib/jobs/cached";
+import { getUserProfile } from "@/lib/preferences-store";
 import { markDuplicate, markNotDuplicate } from "./actions";
 import { StatusSelect } from "./status-select";
 
@@ -237,13 +239,25 @@ function GroupHeader({ group, columns }: { group: JobGroup; columns: number }) {
   );
 }
 
+function preferenceSummary(preferences: UserPreferences) {
+  const titles = preferences.titles.include.slice(0, 3).join(", ") || "any title";
+  const places = [
+    ...preferences.locations.include.filter((item) => item.toLowerCase() !== "remote").slice(0, 2),
+    ...(preferences.locations.remote_ok ? ["Remote"] : []),
+  ].join(" or ");
+  const pay = preferences.pay.min_usd ? `$${Math.round(preferences.pay.min_usd / 1000)}k+` : "any pay";
+  return [titles, places || "any location", pay].join(" · ");
+}
+
 export default async function Home({ searchParams }: { searchParams: Promise<PageParams> }) {
   const params = await searchParams;
   const userId = await getCurrentUserId();
-  const preferences = await getUserPreferences(userId);
+  const profile = await getUserProfile(userId);
+  if (!profile.onboarded) redirect("/onboarding");
+  const preferences = profile.preferences;
   const grouped = preferences.group_duplicates && params.flat !== "1";
   const [result, counts] = await Promise.all([
-    listMatchedJobs({
+    cachedMatchedJobs({
       userId,
       preferences,
       status: params.status,
@@ -263,8 +277,19 @@ export default async function Home({ searchParams }: { searchParams: Promise<Pag
       <header className="border-b border-zinc-200 bg-white">
         <div className="mx-auto flex max-w-6xl flex-col gap-4 px-4 py-6">
           <div>
-            <h1 className="text-2xl font-semibold tracking-tight">Job matches</h1>
-            <p className="mt-1 text-sm text-zinc-600">
+            <div className="flex items-center justify-between gap-4">
+              <h1 className="text-2xl font-semibold tracking-tight">Job matches</h1>
+              <Link
+                href="/settings"
+                className="rounded-md border border-zinc-300 px-3 py-1.5 text-sm text-zinc-800 hover:bg-zinc-100"
+              >
+                Settings
+              </Link>
+            </div>
+            <p className="mt-2 rounded-md bg-zinc-100 px-3 py-1.5 text-sm text-zinc-700">
+              Looking for: {preferenceSummary(preferences)}
+            </p>
+            <p className="mt-2 text-sm text-zinc-600">
               {result.totalJobs} matching roles
               {grouped && result.totalGroups !== result.totalJobs ? ` (${result.totalGroups} groups)` : ""} ·{" "}
               {counts.jobCount} open jobs stored · {counts.liveCompanies} live boards.{" "}

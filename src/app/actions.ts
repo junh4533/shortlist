@@ -3,7 +3,7 @@
 /** Server Actions: persist application status (and copy it onto duplicate listings). */
 
 import { and, eq } from "drizzle-orm";
-import { revalidatePath } from "next/cache";
+import { revalidatePath, revalidateTag } from "next/cache";
 import {
   APPLICATION_STATUSES,
   type ApplicationStatus,
@@ -13,6 +13,11 @@ import { getDb, withBusyRetry } from "@/lib/db";
 import { duplicateOverrides, jobs, jobTracking } from "@/lib/db/schema";
 import { orderedPair } from "@/lib/jobs/duplicates";
 import { listingCollapseKey } from "@/lib/url";
+
+async function invalidateJobs() {
+  revalidateTag(`jobs:${await getCurrentUserId()}`, "max");
+  revalidatePath("/", "layout");
+}
 
 function isStatus(value: string): value is ApplicationStatus {
   return APPLICATION_STATUSES.includes(value as ApplicationStatus);
@@ -93,7 +98,7 @@ export async function updateJobStatus(input: {
     }),
   );
 
-  revalidatePath("/", "layout");
+  await invalidateJobs();
 }
 
 async function saveOverride(jobKeyA: string, jobKeyB: string, verdict: "same" | "different") {
@@ -117,14 +122,14 @@ async function saveOverride(jobKeyA: string, jobKeyB: string, verdict: "same" | 
 export async function markNotDuplicate(formData: FormData) {
   const [primary, member] = String(formData.get("pair") ?? "").split("~");
   await saveOverride(primary ?? "", member ?? "", "different");
-  revalidatePath("/", "layout");
+  await invalidateJobs();
 }
 
 /** "Same job": every checked row is merged into the first checked row's group. */
 export async function markDuplicate(formData: FormData) {
   const keys = [...new Set(formData.getAll("merge").map(String).filter(Boolean))];
   for (const key of keys.slice(1)) await saveOverride(keys[0], key, "same");
-  revalidatePath("/", "layout");
+  await invalidateJobs();
 }
 
 export async function clearJobStatus(formData: FormData) {
@@ -144,5 +149,5 @@ export async function clearJobStatus(formData: FormData) {
         ),
       ),
   );
-  revalidatePath("/", "layout");
+  await invalidateJobs();
 }
