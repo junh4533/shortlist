@@ -78,8 +78,8 @@ export const DATASETS: DatasetEntry[] = [
   },
   {
     id: "companies-parquet",
-    name: "Company-to-ATS registry (companies.parquet)",
-    homepage: "https://openjobdata.com/documentation",
+    name: "OnlyNerds company-to-ATS registry (companies.parquet)",
+    homepage: "https://github.com/yellatp/OnlyNerds",
     url: null,
     license: "Unknown",
     licenseUrl: null,

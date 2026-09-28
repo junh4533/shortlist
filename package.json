@@ -10,7 +10,7 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "ingest": "tsx scripts/ingest.ts",
-    "import-companies": "tsx scripts/ingest.ts --import-only",
+    "import-companies": "tsx scripts/import-companies.ts",
     "harvest-cc": "tsx scripts/harvest-cc.ts",
     "dedupe-jobs": "tsx scripts/dedupe-jobs.ts",
     "migrate": "tsx scripts/migrate.ts",
