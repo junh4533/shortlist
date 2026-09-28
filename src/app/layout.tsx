@@ -24,7 +24,15 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="flex min-h-full flex-col">
+        <div className="flex-1">{children}</div>
+        <footer className="border-t border-zinc-200 px-4 py-3 text-center text-xs text-zinc-500">
+          <a className="underline" href="/about">
+            Data sources
+          </a>
+          . Job postings belong to their employers.
+        </footer>
+      </body>
     </html>
   );
 }

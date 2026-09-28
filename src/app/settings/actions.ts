@@ -8,6 +8,7 @@ import { userPreferencesSchema, type UserPreferences } from "@/lib/config";
 import { getCurrentUserId } from "@/lib/current-user";
 import { listMatchedJobs } from "@/lib/jobs/query";
 import { saveUserPreferences } from "@/lib/preferences-store";
+import { RateLimitError, rateLimit } from "@/lib/rate-limit";
 import { extractFromResume } from "@/lib/skills-vocabulary";
 
 export type SaveState =
@@ -43,6 +44,14 @@ async function persist(formData: FormData, onboarded: boolean): Promise<SaveStat
     };
   }
   const userId = await getCurrentUserId();
+  try {
+    await rateLimit(userId, "write", 60, 60_000);
+  } catch (error) {
+    if (error instanceof RateLimitError) {
+      return { status: "error", message: error.message, fieldErrors: {} };
+    }
+    throw error;
+  }
   await saveUserPreferences(userId, parsed.data, { onboarded });
   revalidateTag(`jobs:${userId}`, "max");
   revalidatePath("/", "layout");
@@ -65,8 +74,15 @@ export type PreviewResult =
 export async function previewPreferences(draft: UserPreferences): Promise<PreviewResult> {
   const parsed = userPreferencesSchema.safeParse(draft);
   if (!parsed.success) return { ok: false, message: "Fix the highlighted fields to see a preview." };
+  const userId = await getCurrentUserId();
+  try {
+    await rateLimit(userId, "preview", 30, 60_000);
+  } catch (error) {
+    if (error instanceof RateLimitError) return { ok: false, message: error.message };
+    throw error;
+  }
   const page = await listMatchedJobs({
-    userId: await getCurrentUserId(),
+    userId,
     preferences: parsed.data,
     pageSize: 5,
     grouped: false,

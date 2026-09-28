@@ -24,6 +24,7 @@ function row(key: string, overrides: Partial<ListedJob> = {}): ListedJob {
     skillsMatched: [],
     rankScore: 50,
     status: "new",
+    snippet: "",
     ...overrides,
   };
 }

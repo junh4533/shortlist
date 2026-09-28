@@ -1,0 +1,27 @@
+name: Harvest
+
+on:
+  schedule:
+    - cron: "0 11 * * 1"
+  workflow_dispatch:
+
+jobs:
+  harvest:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run migrate
+      - run: npm run harvest -- --source cc --backfill 1
+      - run: npm run harvest -- --source hn --months 1
+      - run: curl -fsS -X POST -H "x-revalidate-secret: $REVALIDATE_SECRET" "$APP_URL/api/revalidate"
+    env:
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      DATABASE_AUTH_TOKEN: ${{ secrets.DATABASE_AUTH_TOKEN }}
+      REVALIDATE_SECRET: ${{ secrets.REVALIDATE_SECRET }}
+      APP_URL: ${{ secrets.APP_URL }}

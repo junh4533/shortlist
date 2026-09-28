@@ -177,6 +177,7 @@ function JobRow({
         >
           {job.title}
         </Link>
+        {job.snippet ? <p className="mt-1 line-clamp-2 max-w-xl text-xs text-zinc-500">{job.snippet}</p> : null}
         <div className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-zinc-500">
           <span className="rounded border border-zinc-200 bg-white px-1.5 py-0.5 font-medium text-zinc-700">
             {PROVIDER_LABELS[job.atsProvider] ?? job.atsProvider}

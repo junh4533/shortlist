@@ -17,6 +17,8 @@
     "crawl-careers": "tsx scripts/crawl-careers.ts",
     "harvest-serp": "tsx scripts/harvest-serp.ts",
     "group-duplicates": "tsx scripts/group-duplicates.ts",
+    "copy-to-turso": "tsx scripts/copy-to-turso.ts",
+    "notices": "tsx scripts/generate-notices.ts",
     "dedupe-jobs": "tsx scripts/dedupe-jobs.ts",
     "migrate": "tsx scripts/migrate.ts",
     "backup-db": "tsx scripts/backup-db.ts",

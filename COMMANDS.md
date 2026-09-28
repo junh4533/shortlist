@@ -1,5 +1,7 @@
 # Regular commands
 
+The current runbook is in [README.md](README.md). The notes below are the older local-only loop.
+
 Run these from `C:\Users\junh4\Desktop\jb`. Edit filters anytime in `search.config.yaml` and refresh the UI — no crawl needed for that.
 
 ## Weekly (fresh job listings)

@@ -10,6 +10,7 @@ import {
 } from "@/lib/constants";
 import { getCurrentUserId } from "@/lib/current-user";
 import { getDb, withBusyRetry } from "@/lib/db";
+import { rateLimit } from "@/lib/rate-limit";
 import { duplicateOverrides, jobs, jobTracking } from "@/lib/db/schema";
 import { orderedPair } from "@/lib/jobs/duplicates";
 import { listingCollapseKey } from "@/lib/url";
@@ -36,8 +37,8 @@ export async function updateJobStatus(input: {
   if (!atsProvider || !boardSlug || !externalId) return;
   if (!isStatus(input.status)) return;
   const status = input.status;
-
   const userId = await getCurrentUserId();
+  await rateLimit(userId, "write", 60, 60_000);
   const db = getDb();
   const updatedAt = new Date().toISOString();
   const [source] = await db
@@ -107,6 +108,7 @@ export async function updateJobStatus(input: {
 async function saveOverride(jobKeyA: string, jobKeyB: string, verdict: "same" | "different") {
   if (!jobKeyA || !jobKeyB || jobKeyA === jobKeyB) return;
   const userId = await getCurrentUserId();
+  await rateLimit(userId, "write", 60, 60_000);
   const [a, b] = orderedPair(jobKeyA, jobKeyB);
   // "different" detaches the second key of the stored pair, so keep the caller's primary first.
   const [first, second] = verdict === "different" ? [jobKeyA, jobKeyB] : [a, b];

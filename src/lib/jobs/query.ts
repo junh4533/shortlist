@@ -38,6 +38,7 @@ export type ListedJob = {
   skillsMatched: string[];
   rankScore: number;
   status: ApplicationStatus;
+  snippet: string;
 };
 
 export const JOB_SORT_COLUMNS = [
@@ -389,6 +390,7 @@ export async function listAllMatchedJobs(
       skillsMatched: match.skillsMatched,
       rankScore: match.rankScore,
       status: (status as ApplicationStatus | null) ?? "new",
+      snippet: row.cleanText.replace(/\s+/g, " ").trim().slice(0, 300),
     });
   }
 
