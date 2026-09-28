@@ -10,6 +10,7 @@ import { getDb, migrate, withBusyRetry } from "../src/lib/db";
 import { companies, jobs } from "../src/lib/db/schema";
 import { fetchBoard, type FetchedJob } from "../src/lib/ats";
 import { createMutex, mapPool, sleep } from "../src/lib/concurrency";
+import { upsertCompanies, type CompanyCandidate } from "../src/lib/harvest/insert";
 import { titleMatches } from "../src/lib/match";
 import { jobCollapseKey, normalizeJobUrl } from "../src/lib/url";
 
@@ -26,79 +27,24 @@ function hasFlag(flag: string) {
 /** Upsert CSV/JSON slugs into companies (unknown until ingest checks the live API). */
 async function importCompanies() {
   const config = loadSystemConfig();
-  const db = getDb();
   const allowed = new Set(config.ingest.providers);
-  let inserted = 0;
-  let seen = 0;
-
-  type CompanyInsert = {
-    atsProvider: AtsProvider;
-    slug: string;
-    name: string;
-    status: string;
-    lastCrawled: string | null;
-  };
-
-  async function insertBatch(rows: CompanyInsert[]) {
-    await db.transaction(async (tx) => {
-      for (const row of rows) {
-        const [existing] = await tx
-          .select()
-          .from(companies)
-          .where(
-            and(
-              eq(companies.atsProvider, row.atsProvider),
-              eq(companies.slug, row.slug),
-            ),
-          )
-          .limit(1);
-
-        if (existing) {
-          const keepName =
-            existing.name && existing.name !== existing.slug
-              ? existing.name
-              : row.name;
-          await tx
-            .update(companies)
-            .set({
-              name: keepName,
-              lastCrawled: row.lastCrawled ?? existing.lastCrawled,
-            })
-            .where(
-              and(
-                eq(companies.atsProvider, row.atsProvider),
-                eq(companies.slug, row.slug),
-              ),
-            );
-          continue;
-        }
-
-        await tx.insert(companies).values(row);
-        inserted += 1;
-      }
-    });
-  }
-
-  const batch: CompanyInsert[] = [];
+  const bySource = new Map<string, CompanyCandidate[]>();
   for await (const row of readAllCompanySources(config.ingest.providers, process.cwd())) {
     if (!allowed.has(row.atsProvider)) continue;
-    seen += 1;
-    batch.push({
-      atsProvider: row.atsProvider,
-      slug: row.slug,
-      name: row.name,
-      status: "unknown",
-      lastCrawled: row.lastCrawled,
-    });
-    if (batch.length >= 500) await insertBatch(batch.splice(0, batch.length));
+    const list = bySource.get(row.source) ?? [];
+    list.push(row);
+    bySource.set(row.source, list);
   }
-  if (batch.length) await insertBatch(batch);
-  const [{ total }] = await db
+  for (const [source, rows] of bySource) {
+    const result = await upsertCompanies(rows, source);
+    console.log(
+      `${source}: read ${result.seen} rows; ${result.inserted} new companies; ${result.invalid} invalid slugs`,
+    );
+  }
+  const [{ total }] = await getDb()
     .select({ total: sql<number>`count(*)` })
     .from(companies);
-  console.log(
-    `Read ${seen} source rows; ${inserted} new companies; ${total} total in database`,
-  );
+  console.log(`${total} companies in database`);
 }
 
 type Company = typeof companies.$inferSelect;

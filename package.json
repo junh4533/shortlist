@@ -15,6 +15,7 @@
     "dedupe-jobs": "tsx scripts/dedupe-jobs.ts",
     "migrate": "tsx scripts/migrate.ts",
     "backup-db": "tsx scripts/backup-db.ts",
+    "migrate-normalize-slugs": "tsx scripts/migrate-normalize-slugs.ts",
     "fetch-datasets": "tsx scripts/fetch-datasets.ts",
     "db-stats": "tsx scripts/db-stats.ts"
   },

@@ -1,4 +1,4 @@
-/** Drizzle table types for companies, jobs, and job_tracking. Mirrors the SQL in index.ts. */
+/** Drizzle table types. Mirrors the SQL in src/lib/db/migrations. */
 import { integer, primaryKey, sqliteTable, text } from "drizzle-orm/sqlite-core";
 
 export const companies = sqliteTable(
@@ -10,8 +10,25 @@ export const companies = sqliteTable(
     status: text("status").notNull().default("unknown"),
     lastChecked: text("last_checked"),
     lastCrawled: text("last_crawled"),
+    website: text("website"),
+    usRelevant: integer("us_relevant", { mode: "boolean" }),
+    lastJobCount: integer("last_job_count"),
   },
   (table) => [primaryKey({ columns: [table.atsProvider, table.slug] })],
+);
+
+export const companySources = sqliteTable(
+  "company_sources",
+  {
+    atsProvider: text("ats_provider").notNull(),
+    slug: text("slug").notNull(),
+    source: text("source").notNull(),
+    firstSeen: text("first_seen").notNull(),
+    lastSeen: text("last_seen").notNull(),
+  },
+  (table) => [
+    primaryKey({ columns: [table.atsProvider, table.slug, table.source] }),
+  ],
 );
 
 export const jobs = sqliteTable(

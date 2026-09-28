@@ -102,7 +102,7 @@ export async function* readAllCompanySources(
     const filePath = datasetPath(cwd, `feashliaa-legacy-${provider}`);
     if (!filePath) continue;
     for (const row of readAggregatorJson(filePath, provider)) {
-      yield { ...row, source: "aggregator" as const };
+      yield { ...row, source: "feashliaa-legacy" as const };
     }
   }
 }

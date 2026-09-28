@@ -1,7 +1,6 @@
 /** CLI: harvest new board slugs from Common Crawl CDX (`npm run harvest-cc`). */
 import { writeFileSync } from "node:fs";
 import path from "node:path";
-import { and, eq } from "drizzle-orm";
 import { loadSystemConfig, type AtsProvider } from "../src/lib/config";
 import {
   CDX_PREFIXES,
@@ -9,8 +8,8 @@ import {
   harvestPrefix,
   latestCrawl,
 } from "../src/lib/common-crawl";
-import { getDb, migrate } from "../src/lib/db";
-import { companies } from "../src/lib/db/schema";
+import { migrate } from "../src/lib/db";
+import { upsertCompanies } from "../src/lib/harvest/insert";
 
 function argValue(flag: string) {
   const index = process.argv.indexOf(flag);
@@ -88,32 +87,15 @@ async function main() {
   }
 
   await migrate();
-  const db = getDb();
-  let inserted = 0;
-  const added: { ats_vendor: string; board_slug: string }[] = [];
-
-  for (const row of unique.values()) {
-    const [existing] = await db
-      .select()
-      .from(companies)
-      .where(
-        and(
-          eq(companies.atsProvider, row.atsProvider),
-          eq(companies.slug, row.slug),
-        ),
-      )
-      .limit(1);
-    if (existing) continue;
-    await db.insert(companies).values({
-      atsProvider: row.atsProvider,
-      slug: row.slug,
-      name: row.slug,
-      status: "unknown",
-      lastCrawled: crawl.id,
-    });
-    inserted += 1;
-    added.push({ ats_vendor: row.atsProvider, board_slug: row.slug });
-  }
+  const result = await upsertCompanies(
+    [...unique.values()].map((row) => ({ ...row, lastCrawled: crawl.id })),
+    "harvest:cc",
+  );
+  const inserted = result.inserted;
+  const added = result.insertedRows.map((row) => ({
+    ats_vendor: row.atsProvider,
+    board_slug: row.slug,
+  }));
 
   const outPath = path.join(process.cwd(), "datasets", "commoncrawl_new_slugs.json");
   writeFileSync(outPath, `${JSON.stringify({ crawl: crawl.id, added }, null, 2)}\n`);

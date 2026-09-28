@@ -3,6 +3,7 @@ import { getCurrentUserId } from "./current-user";
 import { getUserPreferences } from "./preferences-store";
 import {
   APPLICATION_STATUSES,
+  STATUS_PRIORITY,
   type ApplicationStatus,
 } from "./constants";
 import { eq, sql } from "drizzle-orm";
@@ -10,17 +11,6 @@ import { getDb } from "./db";
 import { companies, jobs, jobTracking } from "./db/schema";
 import { matchJob } from "./match";
 import { jobCollapseKey, listingCollapseKey } from "./url";
-
-const STATUS_PRIORITY: Record<ApplicationStatus, number> = {
-  offered: 7,
-  interviewing: 6,
-  applied: 5,
-  interested: 4,
-  rejected: 3,
-  not_qualified: 2,
-  skipped: 1,
-  new: 0,
-};
 
 function companyNameQuality(job: ListedJob) {
   return job.companyName.toLowerCase() === job.boardSlug.toLowerCase() ? 0 : 1;

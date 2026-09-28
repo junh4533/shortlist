@@ -12,6 +12,22 @@ export const APPLICATION_STATUSES = [
 
 export type ApplicationStatus = (typeof APPLICATION_STATUSES)[number];
 
+/** Higher = further along; used to pick a status when merging duplicates. */
+export const STATUS_PRIORITY: Record<ApplicationStatus, number> = {
+  offered: 7,
+  interviewing: 6,
+  applied: 5,
+  interested: 4,
+  rejected: 3,
+  not_qualified: 2,
+  skipped: 1,
+  new: 0,
+};
+
+export function statusPriority(status: string) {
+  return STATUS_PRIORITY[status as ApplicationStatus] ?? 0;
+}
+
 export const APPLICATION_STATUS_LABELS: Record<ApplicationStatus, string> = {
   new: "New",
   interested: "Interested",

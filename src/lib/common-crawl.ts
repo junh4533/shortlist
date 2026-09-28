@@ -1,36 +1,8 @@
 /** Query Common Crawl's CDX index for career-board URLs and extract new company slugs. */
 import type { AtsProvider } from "./config";
+import { normalizeSlug } from "./slug";
 
 const COLLINFO_URL = "https://index.commoncrawl.org/collinfo.json";
-
-const SKIP_SLUGS = new Set([
-  "embed",
-  "www",
-  "blog",
-  "about",
-  "careers",
-  "jobs",
-  "job",
-  "api",
-  "admin",
-  "login",
-  "help",
-  "support",
-  "privacy",
-  "terms",
-  "static",
-  "assets",
-  "cdn",
-  "js",
-  "css",
-  "fonts",
-  "images",
-  "img",
-  "search",
-  "apply",
-  "dashboard",
-  "robots.txt",
-]);
 
 export const CDX_PREFIXES: { provider: AtsProvider; url: string }[] = [
   { provider: "greenhouse", url: "boards.greenhouse.io/" },
@@ -68,10 +40,8 @@ export function extractSlug(rawUrl: string): HarvestedSlug | null {
   for (const { provider, regex } of SLUG_PATTERNS) {
     const match = rawUrl.match(regex);
     if (!match?.[1]) continue;
-    const slug = decodeURIComponent(match[1]).trim();
-    if (!slug || SKIP_SLUGS.has(slug.toLowerCase())) return null;
-    if (slug.includes(".")) return null;
-    return { atsProvider: provider, slug };
+    const slug = normalizeSlug(provider, match[1]);
+    return slug ? { atsProvider: provider, slug } : null;
   }
   return null;
 }
