@@ -6,6 +6,7 @@ import { createMutex, mapPool, sleep } from "../src/lib/concurrency";
 import { getDb, migrate, withBusyRetry } from "../src/lib/db";
 import { companies } from "../src/lib/db/schema";
 import { makeTitleAllowlist } from "../src/lib/jobs/store-filter";
+import { regroupDuplicates } from "../src/lib/jobs/regroup";
 import { backfillDerivedFields, boardUsRelevance, storeBoardJobs } from "../src/lib/jobs/store";
 import { importAllSources } from "../src/lib/sources/import";
 
@@ -147,7 +148,8 @@ async function main() {
   npm run ingest -- --provider greenhouse --limit 20
   npm run ingest -- --force           # re-check live boards (skips boards with no US jobs)
   npm run ingest -- --force --include-non-us --include-dead
-  npm run ingest -- --skip-import     # do not re-read datasets first`);
+  npm run ingest -- --skip-import     # do not re-read datasets first
+  npm run ingest -- --no-group        # skip duplicate grouping at the end`);
     return;
   }
 
@@ -159,6 +161,9 @@ async function main() {
   }
   if (!hasFlag("--skip-import")) await importCompanies();
   await ingestBoards();
+  if (!hasFlag("--no-group") && !hasFlag("--verify-only")) {
+    await regroupDuplicates((line) => console.log(line));
+  }
 }
 
 main().catch((error) => {

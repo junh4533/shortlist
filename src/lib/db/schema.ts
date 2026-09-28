@@ -13,6 +13,8 @@ export const companies = sqliteTable(
     website: text("website"),
     usRelevant: integer("us_relevant", { mode: "boolean" }),
     lastJobCount: integer("last_job_count"),
+    companyKey: text("company_key"),
+    companyKeyConfidence: text("company_key_confidence"),
   },
   (table) => [primaryKey({ columns: [table.atsProvider, table.slug] })],
 );
@@ -59,6 +61,9 @@ export const jobs = sqliteTable(
     contentHash: text("content_hash"),
     firstSeenAt: text("first_seen_at"),
     closedAt: text("closed_at"),
+    dupGroupId: text("dup_group_id"),
+    dupConfidence: text("dup_confidence"),
+    dupReason: text("dup_reason"),
   },
   (table) => [
     primaryKey({
@@ -85,6 +90,18 @@ export const serpQueries = sqliteTable("serp_queries", {
   results: integer("results").notNull().default(0),
   newSlugs: integer("new_slugs").notNull().default(0),
 });
+
+export const duplicateOverrides = sqliteTable(
+  "duplicate_overrides",
+  {
+    userId: text("user_id").notNull(),
+    jobKeyA: text("job_key_a").notNull(),
+    jobKeyB: text("job_key_b").notNull(),
+    verdict: text("verdict").notNull(),
+    createdAt: text("created_at").notNull(),
+  },
+  (table) => [primaryKey({ columns: [table.userId, table.jobKeyA, table.jobKeyB] })],
+);
 
 export const jobTracking = sqliteTable(
   "job_tracking",

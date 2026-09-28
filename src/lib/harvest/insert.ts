@@ -3,6 +3,7 @@ import { and, eq, inArray, sql } from "drizzle-orm";
 import type { AtsProvider } from "../ats/providers";
 import { getDb, withBusyRetry } from "../db";
 import { companies, companySources } from "../db/schema";
+import { companyWebsiteDomain } from "../crawl/domain";
 import { normalizeSlug } from "../slug";
 
 export type CompanyCandidate = {
@@ -111,7 +112,7 @@ export async function upsertCompanies(
       atsProvider: candidate.atsProvider,
       slug,
       name: previous && previous.name !== slug ? previous.name : name,
-      website: candidate.website?.trim() || previous?.website || null,
+      website: companyWebsiteDomain(candidate.website) ?? previous?.website ?? null,
       lastCrawled: candidate.lastCrawled ?? previous?.lastCrawled ?? null,
     });
     if (batch.size >= BATCH_SIZE) await flush();

@@ -7,9 +7,10 @@ import {
 } from "../constants";
 import type { UserPreferences } from "../config";
 import { getDb } from "../db";
-import { companies, jobs, jobTracking } from "../db/schema";
+import { companies, duplicateOverrides, jobs, jobTracking } from "../db/schema";
 import { matchJob } from "../match";
 import { jobCollapseKey, listingCollapseKey } from "../url";
+import { jobKey, type DuplicateConfidence } from "./duplicates";
 import { buildPrefilter } from "./prefilter";
 
 /** Rows fetched from SQL before exact matching; newest first. */
@@ -17,9 +18,13 @@ export const CANDIDATE_CAP = 5000;
 export const DEFAULT_PAGE_SIZE = 50;
 
 export type ListedJob = {
+  jobKey: string;
   atsProvider: string;
   boardSlug: string;
   externalId: string;
+  dupGroupId: string | null;
+  dupConfidence: DuplicateConfidence | null;
+  dupReason: string | null;
   companyName: string;
   title: string;
   location: string | null;
@@ -220,6 +225,7 @@ export function ftsQuery(q: string) {
 }
 
 export type ListOptions = {
+  userId: string;
   preferences: UserPreferences;
   q?: string;
   status?: string;
@@ -227,17 +233,88 @@ export type ListOptions = {
   dir?: string;
   page?: number;
   pageSize?: number;
+  /** Show likely cross-platform duplicates as groups (rows are never hidden). */
+  grouped?: boolean;
+};
+
+export type JobGroup = {
+  id: string;
+  primary: ListedJob;
+  members: ListedJob[];
+  confidence: DuplicateConfidence | "manual" | null;
+  reason: string | null;
 };
 
 export type MatchedJobsPage = {
-  rows: ListedJob[];
-  total: number;
+  groups: JobGroup[];
+  totalJobs: number;
+  totalGroups: number;
   page: number;
   pageCount: number;
   pageSize: number;
   /** True when the SQL candidate cap was hit, so older matches may be missing. */
   truncated: boolean;
 };
+
+export type DuplicateOverride = { jobKeyA: string; jobKeyB: string; verdict: string };
+
+/**
+ * Group rows by their stored duplicate group, then apply the user's overrides:
+ * "different" detaches job B from A's group; "same" merges the two rows' groups.
+ */
+export function groupListedJobs(
+  rows: ListedJob[],
+  overrides: DuplicateOverride[],
+  grouped: boolean,
+): JobGroup[] {
+  if (!grouped) {
+    return rows.map((row) => ({ id: row.jobKey, primary: row, members: [], confidence: null, reason: null }));
+  }
+  const byKey = new Map(rows.map((row) => [row.jobKey, row]));
+  const label = new Map(rows.map((row) => [row.jobKey, row.dupGroupId ?? `solo:${row.jobKey}`]));
+
+  for (const override of overrides) {
+    if (override.verdict !== "different") continue;
+    const a = byKey.get(override.jobKeyA);
+    const b = byKey.get(override.jobKeyB);
+    if (a && b && label.get(a.jobKey) === label.get(b.jobKey)) label.set(b.jobKey, `solo:${b.jobKey}`);
+  }
+
+  const parent = new Map<string, string>();
+  const find = (value: string): string => {
+    let root = value;
+    while (parent.has(root) && parent.get(root) !== root) root = parent.get(root)!;
+    return root;
+  };
+  const manual = new Set<string>();
+  for (const override of overrides) {
+    if (override.verdict !== "same") continue;
+    const a = label.get(override.jobKeyA);
+    const b = label.get(override.jobKeyB);
+    if (!a || !b) continue;
+    const rootA = find(a);
+    const rootB = find(b);
+    if (rootA !== rootB) parent.set(rootA, rootB);
+    manual.add(rootB);
+  }
+
+  const buckets = new Map<string, ListedJob[]>();
+  for (const row of rows) {
+    const root = find(label.get(row.jobKey)!);
+    buckets.set(root, [...(buckets.get(root) ?? []), row]);
+  }
+
+  return [...buckets.entries()].map(([id, members]) => {
+    const primary = members.reduce((best, row) => (preferListedJob(best, row) ? row : best));
+    const others = members.filter((row) => row !== primary).sort((a, b) => b.rankScore - a.rankScore);
+    if (!others.length) return { id, primary, members: [], confidence: null, reason: null };
+    if (manual.has(find(id))) {
+      return { id, primary, members: others, confidence: "manual", reason: "You marked these as the same job" };
+    }
+    const auto = members.find((row) => row.dupConfidence);
+    return { id, primary, members: others, confidence: auto?.dupConfidence ?? "low", reason: auto?.dupReason ?? null };
+  });
+}
 
 /** All matching, collapsed, sorted jobs for one user (unpaginated). */
 export async function listAllMatchedJobs(
@@ -291,9 +368,13 @@ export async function listAllMatchedJobs(
       continue;
     }
     listed.push({
+      jobKey: jobKey(row),
       atsProvider: row.atsProvider,
       boardSlug: row.boardSlug,
       externalId: row.externalId,
+      dupGroupId: row.dupGroupId,
+      dupConfidence: row.dupConfidence as DuplicateConfidence | null,
+      dupReason: row.dupReason,
       companyName: row.companyName,
       title: row.title,
       location: row.location,
@@ -317,14 +398,36 @@ export async function listAllMatchedJobs(
   return { rows, truncated: candidates.length >= CANDIDATE_CAP };
 }
 
+export async function loadDuplicateOverrides(userId: string): Promise<DuplicateOverride[]> {
+  return getDb()
+    .select({
+      jobKeyA: duplicateOverrides.jobKeyA,
+      jobKeyB: duplicateOverrides.jobKeyB,
+      verdict: duplicateOverrides.verdict,
+    })
+    .from(duplicateOverrides)
+    .where(eq(duplicateOverrides.userId, userId))
+    .orderBy(duplicateOverrides.createdAt);
+}
+
+/** Paginated by group, so a group never splits across pages. */
 export async function listMatchedJobs(options: ListOptions): Promise<MatchedJobsPage> {
   const pageSize = Math.max(1, options.pageSize ?? DEFAULT_PAGE_SIZE);
-  const { rows, truncated } = await listAllMatchedJobs(options);
-  const pageCount = Math.max(1, Math.ceil(rows.length / pageSize));
+  const grouped = options.grouped ?? true;
+  const [{ rows, truncated }, overrides] = await Promise.all([
+    listAllMatchedJobs(options),
+    grouped ? loadDuplicateOverrides(options.userId) : Promise.resolve([]),
+  ]);
+  const { sort, dir } = parseJobSort(options.sort, options.dir);
+  const groups = groupListedJobs(rows, overrides, grouped).sort((left, right) =>
+    compareListedJobs(left.primary, right.primary, sort, dir),
+  );
+  const pageCount = Math.max(1, Math.ceil(groups.length / pageSize));
   const page = Math.min(Math.max(1, Math.floor(options.page ?? 1)), pageCount);
   return {
-    rows: rows.slice((page - 1) * pageSize, page * pageSize),
-    total: rows.length,
+    groups: groups.slice((page - 1) * pageSize, page * pageSize),
+    totalJobs: rows.length,
+    totalGroups: groups.length,
     page,
     pageCount,
     pageSize,

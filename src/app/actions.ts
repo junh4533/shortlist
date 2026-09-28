@@ -8,8 +8,10 @@ import {
   APPLICATION_STATUSES,
   type ApplicationStatus,
 } from "@/lib/constants";
+import { getCurrentUserId } from "@/lib/current-user";
 import { getDb, withBusyRetry } from "@/lib/db";
-import { jobs, jobTracking } from "@/lib/db/schema";
+import { duplicateOverrides, jobs, jobTracking } from "@/lib/db/schema";
+import { orderedPair } from "@/lib/jobs/duplicates";
 import { listingCollapseKey } from "@/lib/url";
 
 function isStatus(value: string): value is ApplicationStatus {
@@ -91,6 +93,37 @@ export async function updateJobStatus(input: {
     }),
   );
 
+  revalidatePath("/", "layout");
+}
+
+async function saveOverride(jobKeyA: string, jobKeyB: string, verdict: "same" | "different") {
+  if (!jobKeyA || !jobKeyB || jobKeyA === jobKeyB) return;
+  const userId = await getCurrentUserId();
+  const [a, b] = orderedPair(jobKeyA, jobKeyB);
+  // "different" detaches the second key of the stored pair, so keep the caller's primary first.
+  const [first, second] = verdict === "different" ? [jobKeyA, jobKeyB] : [a, b];
+  await withBusyRetry(() =>
+    getDb()
+      .insert(duplicateOverrides)
+      .values({ userId, jobKeyA: first, jobKeyB: second, verdict, createdAt: new Date().toISOString() })
+      .onConflictDoUpdate({
+        target: [duplicateOverrides.userId, duplicateOverrides.jobKeyA, duplicateOverrides.jobKeyB],
+        set: { verdict, createdAt: new Date().toISOString() },
+      }),
+  );
+}
+
+/** "Not the same job": the form button value is "<primaryKey>~<memberKey>". */
+export async function markNotDuplicate(formData: FormData) {
+  const [primary, member] = String(formData.get("pair") ?? "").split("~");
+  await saveOverride(primary ?? "", member ?? "", "different");
+  revalidatePath("/", "layout");
+}
+
+/** "Same job": every checked row is merged into the first checked row's group. */
+export async function markDuplicate(formData: FormData) {
+  const keys = [...new Set(formData.getAll("merge").map(String).filter(Boolean))];
+  for (const key of keys.slice(1)) await saveOverride(keys[0], key, "same");
   revalidatePath("/", "layout");
 }
 

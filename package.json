@@ -16,6 +16,7 @@
     "load-seed-domains": "tsx scripts/load-seed-domains.ts",
     "crawl-careers": "tsx scripts/crawl-careers.ts",
     "harvest-serp": "tsx scripts/harvest-serp.ts",
+    "group-duplicates": "tsx scripts/group-duplicates.ts",
     "dedupe-jobs": "tsx scripts/dedupe-jobs.ts",
     "migrate": "tsx scripts/migrate.ts",
     "backup-db": "tsx scripts/backup-db.ts",
