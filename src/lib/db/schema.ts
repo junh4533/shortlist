@@ -78,6 +78,14 @@ export const seedDomains = sqliteTable("seed_domains", {
   result: text("result"),
 });
 
+export const serpQueries = sqliteTable("serp_queries", {
+  query: text("query").primaryKey(),
+  provider: text("provider").notNull(),
+  runAt: text("run_at").notNull(),
+  results: integer("results").notNull().default(0),
+  newSlugs: integer("new_slugs").notNull().default(0),
+});
+
 export const jobTracking = sqliteTable(
   "job_tracking",
   {
