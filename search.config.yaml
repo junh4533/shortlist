@@ -1,4 +1,4 @@
-# Edit this file to change what jobs match. Re-ingest only when you want newer postings.
+# Default search preferences (new users start from this template).
 # Title/location/pay/skill filters re-run on already-cached jobs.
 
 profile:
@@ -184,23 +184,5 @@ seniority:
       - mid senior
       - midsenior
 
-ingest:
-  providers:
-    - greenhouse
-    - lever
-    - ashby
-  csv_path: datasets/lastroundai-ats-company-directory-2026-08.csv
-  # Feashliaa/job-board-aggregator slug lists (CC BY-NC 4.0, personal use)
-  aggregator_json:
-    greenhouse: datasets/greenhouse_companies.json
-    lever: datasets/lever_companies.json
-    ashby: datasets/ashby_companies.json
-  polite_delay_ms: 300
-  concurrency: 6
-  user_agent: jb-personal-job-search/0.1
-
-# Common Crawl CDX — discovers new board slugs, not live job text.
-# Be polite; the index server asks not to be hammered.
-harvest:
-  cdx_delay_ms: 1500
-  max_pages: 5
+# Show likely cross-platform duplicates as one group (rows are never hidden).
+group_duplicates: true

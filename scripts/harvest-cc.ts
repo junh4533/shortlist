@@ -2,7 +2,7 @@
 import { writeFileSync } from "node:fs";
 import path from "node:path";
 import { and, eq } from "drizzle-orm";
-import { loadSearchConfig, type AtsProvider } from "../src/lib/config";
+import { loadSystemConfig, type AtsProvider } from "../src/lib/config";
 import {
   CDX_PREFIXES,
   crawlById,
@@ -33,11 +33,11 @@ async function main() {
     return;
   }
 
-  const config = loadSearchConfig();
+  const config = loadSystemConfig();
   const userAgent = config.ingest.user_agent;
   const maxPages = argValue("--max-pages")
     ? Number(argValue("--max-pages"))
-    : config.harvest.max_pages;
+    : (config.harvest.max_pages ?? Number.POSITIVE_INFINITY);
   const providerFilter = argValue("--provider") as AtsProvider | undefined;
   const dryRun = hasFlag("--dry-run");
   const crawlId = argValue("--crawl");

@@ -253,6 +253,9 @@ export async function fetchBoard(
   slug: string,
   userAgent: string,
 ): Promise<FetchResult> {
+  if (provider !== "greenhouse" && provider !== "lever" && provider !== "ashby") {
+    return { ok: false, reason: "error" };
+  }
   const url = boardUrl(provider, slug);
   try {
     const { status, data } = await getJson(url, userAgent);

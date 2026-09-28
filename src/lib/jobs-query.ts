@@ -1,5 +1,6 @@
 /** Load jobs from SQLite, run matchJob, collapse duplicates, and sort for the home table. */
-import { loadSearchConfig } from "./config";
+import { getCurrentUserId } from "./current-user";
+import { getUserPreferences } from "./preferences-store";
 import {
   APPLICATION_STATUSES,
   type ApplicationStatus,
@@ -232,7 +233,7 @@ export async function listMatchedJobs(options?: {
   sort?: string;
   dir?: string;
 }): Promise<ListedJob[]> {
-  const config = loadSearchConfig();
+  const config = await getUserPreferences(await getCurrentUserId());
   const db = getDb();
   const [rows, tracking] = await Promise.all([
     db.select().from(jobs),

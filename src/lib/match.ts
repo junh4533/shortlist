@@ -1,5 +1,5 @@
 /** YAML filters: keep/drop a job and compute rankScore. Used at ingest (title) and on page load (full match). */
-import type { SearchConfig } from "./config";
+import type { UserPreferences } from "./config";
 
 export type NormalizedJob = {
 	title: string;
@@ -51,7 +51,7 @@ function containsPhrase(haystack: string, phrase: string) {
 export function textExcluded(
 	title: string,
 	description: string,
-	config: SearchConfig,
+	config: UserPreferences,
 ) {
 	const haystack = `${title}\n${description}`;
 	return config.exclude_phrases.some((phrase) =>
@@ -84,7 +84,7 @@ function seniorityPatterns(name: string, aliases: Record<string, string[]>) {
 }
 
 function preferEntries(
-	prefer: SearchConfig["seniority"]["prefer"] | undefined,
+	prefer: UserPreferences["seniority"]["prefer"] | undefined,
 ): { name: string; weight: number }[] {
 	if (!prefer) return [];
 	if (Array.isArray(prefer)) {
@@ -97,7 +97,7 @@ function preferEntries(
 }
 
 function preferNames(
-	prefer: SearchConfig["seniority"]["prefer"] | string[] | undefined,
+	prefer: UserPreferences["seniority"]["prefer"] | string[] | undefined,
 ) {
 	if (!prefer) return [];
 	if (Array.isArray(prefer)) return prefer;
@@ -106,7 +106,7 @@ function preferNames(
 
 function bestPreferWeight(
 	hits: string[],
-	prefer: SearchConfig["seniority"]["prefer"],
+	prefer: UserPreferences["seniority"]["prefer"],
 ) {
 	const weights = new Map(
 		preferEntries(prefer).map((entry) => [entry.name, entry.weight]),
@@ -133,7 +133,7 @@ function seniorityHits(
 	});
 }
 
-function explicitLevelMarkers(config: SearchConfig) {
+function explicitLevelMarkers(config: UserPreferences) {
 	const names = [
 		...preferNames(config.seniority.prefer).filter(
 			(name) => !UNLEVELED_KEYS.has(name),
@@ -145,20 +145,20 @@ function explicitLevelMarkers(config: SearchConfig) {
 	);
 }
 
-function isUnleveledTitle(title: string, config: SearchConfig) {
+function isUnleveledTitle(title: string, config: UserPreferences) {
 	return !explicitLevelMarkers(config).some((marker) =>
 		containsPhrase(title, marker),
 	);
 }
 
-function unleveledPreferKey(config: SearchConfig) {
+function unleveledPreferKey(config: UserPreferences) {
 	return preferNames(config.seniority.prefer).find((name) =>
 		UNLEVELED_KEYS.has(name),
 	);
 }
 
 /** Ingest + UI: title must hit include phrases and not hit exclude/seniority-exclude. */
-export function titleMatches(title: string, config: SearchConfig) {
+export function titleMatches(title: string, config: UserPreferences) {
 	const value = title.toLowerCase();
 	if (config.titles.exclude.some((phrase) => containsPhrase(title, phrase))) {
 		return false;
@@ -375,7 +375,7 @@ function geoIncludes(location: string, include: string[]) {
 }
 
 /** Remote vs hybrid vs onsite vs US-only. Hybrid/onsite must match geo include tokens (NYC area). */
-export function locationMatches(job: NormalizedJob, config: SearchConfig) {
+export function locationMatches(job: NormalizedJob, config: UserPreferences) {
 	const loc = (job.location ?? "").toLowerCase();
 	const workplace = (job.workplaceType ?? "").toLowerCase();
 	if (includesAnyLocation(loc, config.locations.exclude)) return false;
@@ -417,7 +417,7 @@ export function locationMatches(job: NormalizedJob, config: SearchConfig) {
 }
 
 /** Drop if listed max is too low or listed min is above YAML max. Unknown salary can still pass. */
-export function payMatches(job: NormalizedJob, config: SearchConfig) {
+export function payMatches(job: NormalizedJob, config: UserPreferences) {
 	const listedMin = job.salaryMin ?? job.salaryMax;
 	const listedMax = job.salaryMax ?? job.salaryMin;
 	if (listedMin == null || listedMax == null) {
@@ -433,7 +433,7 @@ export function payMatches(job: NormalizedJob, config: SearchConfig) {
 export function recencyScore(
 	postedAt: string | null | undefined,
 	updatedAt: string | null | undefined,
-	config: SearchConfig,
+	config: UserPreferences,
 ) {
 	const maxBonus = config.freshness.recency_bonus;
 	if (!maxBonus) return 0;
@@ -451,7 +451,7 @@ export function recencyScore(
 /** `ok` = hard filters (title/location/pay/skills/phrases). `rankScore` = sort weights only. */
 export function matchJob(
 	job: NormalizedJob,
-	config: SearchConfig,
+	config: UserPreferences,
 ): MatchResult {
 	const haystack = `${job.title}\n${job.cleanText}`.toLowerCase();
 	const titleMatched = titleMatches(job.title, config);

@@ -1,0 +1,77 @@
+# Operator settings for ingest and discovery. User search preferences live in
+# search.config.yaml (the default template) and, later, per-user in the database.
+
+ingest:
+  providers:
+    - greenhouse
+    - lever
+    - ashby
+  polite_delay_ms: 300
+  concurrency: 6
+  # Add a contact URL or email in parentheses before running the careers crawler.
+  user_agent: jb-personal-job-search/0.1
+  # Only store jobs that could be in the US (explicitly non-US locations are skipped).
+  us_only: true
+  per_provider:
+    workable:
+      concurrency: 1
+      delay_ms: 2000
+    ashby:
+      concurrency: 3
+      delay_ms: 500
+    bamboohr:
+      concurrency: 2
+      delay_ms: 1000
+  # Broad role families kept at ingest so every user's filters can run on cached jobs.
+  store_title_allowlist:
+    - engineer
+    - engineering
+    - developer
+    - software
+    - frontend
+    - front-end
+    - front end
+    - backend
+    - back-end
+    - full stack
+    - full-stack
+    - fullstack
+    - web
+    - data
+    - machine learning
+    - ml
+    - ai
+    - product
+    - design
+    - designer
+    - ux
+    - ui
+    - devops
+    - sre
+    - reliability
+    - security
+    - qa
+    - quality
+    - test
+    - mobile
+    - ios
+    - android
+    - platform
+    - infrastructure
+    - cloud
+    - analyst
+    - architect
+    - solutions
+    - technical
+    - it
+    - programmer
+    - scientist
+
+# Common Crawl CDX and other discovery sources find new board slugs, not job text.
+# Be polite; the index server asks not to be hammered.
+harvest:
+  cdx_delay_ms: 1500
+  crawls: []
+  github_readmes:
+    - SimplifyJobs/New-Grad-Positions
+    - SimplifyJobs/Summer2026-Internships

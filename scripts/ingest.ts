@@ -1,6 +1,10 @@
 /** CLI: import company slugs, then fetch ATS boards into SQLite (`npm run ingest`). */
 import { and, eq, sql } from "drizzle-orm";
-import { loadSearchConfig, type AtsProvider } from "../src/lib/config";
+import {
+  loadDefaultPreferences,
+  loadSystemConfig,
+  type AtsProvider,
+} from "../src/lib/config";
 import { readAllCompanySources } from "../src/lib/csv";
 import { getDb, migrate, withBusyRetry } from "../src/lib/db";
 import { companies, jobs } from "../src/lib/db/schema";
@@ -21,7 +25,7 @@ function hasFlag(flag: string) {
 
 /** Upsert CSV/JSON slugs into companies (unknown until ingest checks the live API). */
 async function importCompanies() {
-  const config = loadSearchConfig();
+  const config = loadSystemConfig();
   const db = getDb();
   const allowed = new Set(config.ingest.providers);
   let inserted = 0;
@@ -76,7 +80,7 @@ async function importCompanies() {
   }
 
   const batch: CompanyInsert[] = [];
-  for await (const row of readAllCompanySources(config, process.cwd())) {
+  for await (const row of readAllCompanySources(config.ingest.providers, process.cwd())) {
     if (!allowed.has(row.atsProvider)) continue;
     seen += 1;
     batch.push({
@@ -195,7 +199,8 @@ async function storeBoardJobs(
 
 /** Fetch boards (unknown/error unless --force), mark live/dead, store title-matching jobs. */
 async function ingestBoards() {
-  const config = loadSearchConfig();
+  const config = loadSystemConfig();
+  const preferences = loadDefaultPreferences();
   const db = getDb();
   const limit = argValue("--limit") ? Number(argValue("--limit")) : undefined;
   const providerFilter = argValue("--provider") as AtsProvider | undefined;
@@ -248,7 +253,7 @@ async function ingestBoards() {
       live += 1;
       const matching = verifyOnly
         ? []
-        : result.jobs.filter((job) => titleMatches(job.title, config));
+        : result.jobs.filter((job) => titleMatches(job.title, preferences));
       await writeLock(async () => {
         await withBusyRetry(() =>
           db

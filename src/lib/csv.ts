@@ -1,8 +1,9 @@
 /** Read LastRound CSV and aggregator JSON slug lists into company rows. */
-import { createReadStream, readFileSync } from "node:fs";
+import { createReadStream, existsSync, readFileSync } from "node:fs";
 import path from "node:path";
 import { createInterface } from "node:readline";
-import type { AtsProvider, SearchConfig } from "./config";
+import type { AtsProvider } from "./config";
+import { DATASETS } from "./sources/manifest";
 
 export type CompanyRow = {
   atsProvider: AtsProvider;
@@ -80,15 +81,26 @@ export function* readAggregatorJson(filePath: string, provider: AtsProvider) {
   }
 }
 
-export async function* readAllCompanySources(config: SearchConfig, cwd: string) {
-  const csvPath = path.resolve(cwd, config.ingest.csv_path);
-  for await (const row of readCompanyCsv(csvPath)) {
-    yield { ...row, source: "lastround" as const };
+function datasetPath(cwd: string, id: string) {
+  const entry = DATASETS.find((dataset) => dataset.id === id);
+  if (!entry?.dest) return null;
+  const filePath = path.resolve(cwd, entry.dest);
+  return existsSync(filePath) ? filePath : null;
+}
+
+export async function* readAllCompanySources(
+  providers: readonly AtsProvider[],
+  cwd: string,
+) {
+  const csvPath = datasetPath(cwd, "lastround");
+  if (csvPath) {
+    for await (const row of readCompanyCsv(csvPath)) {
+      yield { ...row, source: "lastround" as const };
+    }
   }
-  for (const provider of config.ingest.providers) {
-    const relative = config.ingest.aggregator_json[provider];
-    if (!relative) continue;
-    const filePath = path.resolve(cwd, relative);
+  for (const provider of providers) {
+    const filePath = datasetPath(cwd, `feashliaa-legacy-${provider}`);
+    if (!filePath) continue;
     for (const row of readAggregatorJson(filePath, provider)) {
       yield { ...row, source: "aggregator" as const };
     }
