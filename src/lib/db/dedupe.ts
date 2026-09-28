@@ -23,6 +23,7 @@ function jobKeyWhere(row: Pick<JobKeyRow, "atsProvider" | "boardSlug" | "externa
 
 function trackingKeyWhere(row: Pick<JobKeyRow, "atsProvider" | "boardSlug" | "externalId">) {
   return and(
+    eq(jobTracking.userId, "local"),
     eq(jobTracking.atsProvider, row.atsProvider),
     eq(jobTracking.boardSlug, row.boardSlug),
     eq(jobTracking.externalId, row.externalId),
@@ -86,6 +87,7 @@ export async function dedupeJobsByUrl() {
           if (extraTracking) {
             await tx.insert(jobTracking).values({
               ...extraTracking,
+              userId: "local",
               atsProvider: keep.atsProvider,
               boardSlug: keep.boardSlug,
               externalId: keep.externalId,

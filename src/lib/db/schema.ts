@@ -113,6 +113,7 @@ export const userProfiles = sqliteTable("user_profiles", {
 export const jobTracking = sqliteTable(
   "job_tracking",
   {
+    userId: text("user_id").notNull(),
     atsProvider: text("ats_provider").notNull(),
     boardSlug: text("board_slug").notNull(),
     externalId: text("external_id").notNull(),
@@ -122,7 +123,7 @@ export const jobTracking = sqliteTable(
   },
   (table) => [
     primaryKey({
-      columns: [table.atsProvider, table.boardSlug, table.externalId],
+      columns: [table.userId, table.atsProvider, table.boardSlug, table.externalId],
     }),
   ],
 );

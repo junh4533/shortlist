@@ -37,6 +37,7 @@ export async function updateJobStatus(input: {
   if (!isStatus(input.status)) return;
   const status = input.status;
 
+  const userId = await getCurrentUserId();
   const db = getDb();
   const updatedAt = new Date().toISOString();
   const [source] = await db
@@ -80,6 +81,7 @@ export async function updateJobStatus(input: {
         await tx
           .insert(jobTracking)
           .values({
+            userId,
             atsProvider: row.atsProvider,
             boardSlug: row.boardSlug,
             externalId: row.externalId,
@@ -88,6 +90,7 @@ export async function updateJobStatus(input: {
           })
           .onConflictDoUpdate({
             target: [
+              jobTracking.userId,
               jobTracking.atsProvider,
               jobTracking.boardSlug,
               jobTracking.externalId,
@@ -138,11 +141,13 @@ export async function clearJobStatus(formData: FormData) {
   const externalId = String(formData.get("externalId") ?? "");
   if (!atsProvider || !boardSlug || !externalId) return;
 
+  const userId = await getCurrentUserId();
   await withBusyRetry(() =>
     getDb()
       .delete(jobTracking)
       .where(
         and(
+          eq(jobTracking.userId, userId),
           eq(jobTracking.atsProvider, atsProvider),
           eq(jobTracking.boardSlug, boardSlug),
           eq(jobTracking.externalId, externalId),

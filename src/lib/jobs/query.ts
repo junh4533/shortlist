@@ -344,6 +344,7 @@ export async function listAllMatchedJobs(
     .leftJoin(
       jobTracking,
       and(
+        eq(jobTracking.userId, options.userId),
         eq(jobTracking.atsProvider, jobs.atsProvider),
         eq(jobTracking.boardSlug, jobs.boardSlug),
         eq(jobTracking.externalId, jobs.externalId),
