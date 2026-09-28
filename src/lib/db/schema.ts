@@ -67,6 +67,17 @@ export const jobs = sqliteTable(
   ],
 );
 
+export const seedDomains = sqliteTable("seed_domains", {
+  domain: text("domain").primaryKey(),
+  bestRank: integer("best_rank"),
+  listCount: integer("list_count").notNull().default(0),
+  sources: text("sources").notNull().default(""),
+  tier: integer("tier"),
+  dnsOk: integer("dns_ok", { mode: "boolean" }),
+  crawledAt: text("crawled_at"),
+  result: text("result"),
+});
+
 export const jobTracking = sqliteTable(
   "job_tracking",
   {

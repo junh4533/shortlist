@@ -1,0 +1,80 @@
+# Registrable domains that are infrastructure, not company homepages: CDN/edge networks, ad and
+# tracking endpoints, URL shorteners, and shared hosting domains. Company domains (even for infra
+# companies such as cloudflare.com or datadoghq.com) do not belong here: they may hire via an ATS.
+# One per line; # starts a comment.
+
+# CDN and edge networks
+akamai.net
+akamaiedge.net
+akamaihd.net
+akamaized.net
+cloudfront.net
+cloudflare.net
+fastly.net
+fastlylb.net
+edgekey.net
+edgesuite.net
+azureedge.net
+azurefd.net
+cdn77.org
+jsdelivr.net
+unpkg.com
+bootstrapcdn.com
+gstatic.com
+googleapis.com
+googleusercontent.com
+googlevideo.com
+fbcdn.net
+twimg.com
+licdn.com
+ytimg.com
+tiktokcdn.com
+redditmedia.com
+whatsapp.net
+windowsupdate.com
+
+# ad and tracking endpoints
+googlesyndication.com
+googleadservices.com
+googletagmanager.com
+google-analytics.com
+doubleclick.net
+2mdn.net
+adnxs.com
+adsrvr.org
+amazon-adsystem.com
+criteo.net
+scorecardresearch.com
+quantserve.com
+moatads.com
+demdex.net
+omtrdc.net
+everesttech.net
+nr-data.net
+app-measurement.com
+
+# URL shorteners
+bit.ly
+t.co
+tinyurl.com
+goo.gl
+ow.ly
+buff.ly
+lnkd.in
+
+# shared hosting domains (subdomains belong to many unrelated sites)
+amazonaws.com
+azurewebsites.net
+windows.net
+cloudapp.net
+herokuapp.com
+vercel.app
+netlify.app
+github.io
+githubusercontent.com
+firebaseio.com
+firebaseapp.com
+appspot.com
+digitaloceanspaces.com
+wixsite.com
+blogspot.com

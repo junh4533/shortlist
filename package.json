@@ -13,6 +13,8 @@
     "import-companies": "tsx scripts/import-companies.ts",
     "harvest": "tsx scripts/harvest.ts",
     "harvest-cc": "tsx scripts/harvest.ts --source cc",
+    "load-seed-domains": "tsx scripts/load-seed-domains.ts",
+    "crawl-careers": "tsx scripts/crawl-careers.ts",
     "dedupe-jobs": "tsx scripts/dedupe-jobs.ts",
     "migrate": "tsx scripts/migrate.ts",
     "backup-db": "tsx scripts/backup-db.ts",
@@ -22,12 +24,15 @@
     "inspect-dataset": "tsx scripts/inspect-dataset.ts"
   },
   "dependencies": {
+    "@crawlee/cheerio": "^3.18.1",
     "@libsql/client": "^0.18.0",
     "cheerio": "^1.2.0",
     "drizzle-orm": "^0.45.2",
     "next": "16.3.1",
     "react": "19.2.8",
     "react-dom": "19.2.8",
+    "robots-parser": "^3.0.1",
+    "tldts": "^7.4.16",
     "yaml": "^2.9.0",
     "zod": "^4.4.3"
   },
