@@ -9,9 +9,8 @@ import {
 	useState,
 	useTransition,
 	type FormEvent,
-	type LucideIcon,
 } from "react";
-import { Building2, FileText, Layers2, ListFilter } from "lucide-react";
+import { Building2, FileText, Layers2, ListFilter, type LucideIcon } from "lucide-react";
 import { signUp } from "../auth-actions";
 import { Logo } from "./logo";
 
