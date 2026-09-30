@@ -2,7 +2,12 @@ import { readFileSync } from "node:fs";
 import path from "node:path";
 import { describe, expect, it } from "vitest";
 import { parse as parseYaml } from "yaml";
-import { loadDefaultPreferences, userPreferencesSchema } from "./preferences";
+import {
+  blankPreferences,
+  loadDefaultPreferences,
+  parsePreferencesText,
+  userPreferencesSchema,
+} from "./preferences";
 import { loadSystemConfig, parseSystemConfig, providerLimits } from "./system";
 
 const root = path.resolve(import.meta.dirname, "../../..");
@@ -18,6 +23,29 @@ describe("user preferences", () => {
     const raw = parseYaml(readFileSync(path.join(root, "search.config.yaml"), "utf8"));
     expect(raw.ingest).toBeUndefined();
     expect(userPreferencesSchema.safeParse(raw).success).toBe(true);
+  });
+
+  it("blankPreferences is empty for search fields and keeps product defaults", () => {
+    const prefs = blankPreferences();
+    expect(prefs.titles.include).toEqual([]);
+    expect(prefs.skills.preferred).toEqual([]);
+    expect(prefs.locations.include).toEqual([]);
+    expect(prefs.pay.min_usd).toBe(0);
+    expect(prefs.pay.currency).toBe("USD");
+    expect(prefs.pay.period).toBe("year");
+    expect(prefs.freshness.max_age_days).toBe(21);
+    expect(prefs.group_duplicates).toBe(true);
+    expect(userPreferencesSchema.safeParse(prefs).success).toBe(true);
+  });
+
+  it("parsePreferencesText accepts JSON and YAML", () => {
+    const yaml = readFileSync(path.join(root, "search.config.yaml"), "utf8");
+    const fromYaml = parsePreferencesText(yaml);
+    expect(fromYaml.ok).toBe(true);
+    if (!fromYaml.ok) return;
+    const fromJson = parsePreferencesText(JSON.stringify(fromYaml.preferences));
+    expect(fromJson.ok).toBe(true);
+    if (fromJson.ok) expect(fromJson.preferences.profile.home).toBe(fromYaml.preferences.profile.home);
   });
 });
 

@@ -1,8 +1,16 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #fafafa;
+  --foreground: #18181b;
+}
+
+.dark {
+  --background: #09090b;
+  --foreground: #fafafa;
+  color-scheme: dark;
 }
 
 @theme inline {
@@ -12,15 +20,116 @@
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  tr.row-leave td {
+    animation: row-leave-cell 420ms ease forwards;
+  }
+
+  tr.row-leave td > * {
+    overflow: hidden;
+    animation: row-leave-child 420ms ease forwards;
+  }
+}
+
+@keyframes row-leave-cell {
+  0% {
+    opacity: 1;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+  }
+  55% {
+    opacity: 0;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+  }
+  100% {
+    opacity: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+    line-height: 0;
+    border-color: transparent;
+  }
+}
+
+@keyframes row-leave-child {
+  0% {
+    max-height: 4.5rem;
+    opacity: 1;
+  }
+  55% {
+    max-height: 4.5rem;
+    opacity: 0;
+  }
+  100% {
+    max-height: 0;
+    opacity: 0;
+  }
+}
+
+@keyframes toast-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.toast-in {
+  animation: toast-in 180ms ease;
+}
+
+@keyframes onboard-step-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .onboard-step {
+    animation: onboard-step-in 220ms ease;
+  }
+}
+
+.hide-check {
+  display: inline-flex;
+  height: 1.125rem;
+  width: 1.125rem;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.25rem;
+  border: 1.5px solid #52525b;
+  background: #fff;
+  color: transparent;
+}
+
+.hide-check.is-on {
+  border-color: #18181b;
+  background: #18181b;
+  color: #fff;
+}
+
+.dark .hide-check {
+  border-color: #e4e4e7;
+  background: #09090b;
+}
+
+.dark .hide-check.is-on {
+  border-color: #fafafa;
+  background: #fafafa;
+  color: #18181b;
 }

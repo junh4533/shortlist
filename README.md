@@ -1,4 +1,4 @@
-# jb
+# Shortlist
 
 Personal multi-ATS job search. Company boards are discovered from public datasets and crawls, jobs are cached in SQLite (or Turso), ranked against each user's preferences, and application status is tracked in a Next.js table.
 
@@ -20,13 +20,13 @@ Leave `BASIC_AUTH_USERS` empty on your own machine. Set it (`name:longpassword,f
 
 ## Recurring commands
 
-| When | Command |
-| --- | --- |
-| New postings on known boards | `npm run ingest -- --force` |
-| New company slugs from Common Crawl | `npm run harvest -- --source cc --backfill 1` then `npm run ingest` |
-| Hacker News / GitHub job lists | `npm run harvest -- --source hn --months 1` and `--source github` |
-| Careers-page crawl | `npm run load-seed-domains` then `npm run crawl-careers -- --tier 0` |
-| SERP gap-fill | `npm run harvest-serp -- --provider serper --max-queries 50` |
+| When                                | Command                                                              |
+| ----------------------------------- | -------------------------------------------------------------------- |
+| New postings on known boards        | `npm run ingest -- --force`                                          |
+| New company slugs from Common Crawl | `npm run harvest -- --source cc --backfill 1` then `npm run ingest`  |
+| Hacker News / GitHub job lists      | `npm run harvest -- --source hn --months 1` and `--source github`    |
+| Careers-page crawl                  | `npm run load-seed-domains` then `npm run crawl-careers -- --tier 0` |
+| SERP gap-fill                       | `npm run harvest-serp -- --provider serper --max-queries 50`         |
 
 Do not harvest Common Crawl every week. It finds slugs, not job text.
 

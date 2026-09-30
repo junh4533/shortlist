@@ -1,10 +1,11 @@
-# Default search preferences (new users start from this template).
+# Example search preferences (schema fixture / personal reference).
+# New accounts start from blankPreferences() in code, not this file.
 # Title/location/pay/skill filters re-run on already-cached jobs.
 
 profile:
   name: Jun Huang
   home: Flushing, NY
-  years_experience: 4
+  years_experience: 5
 
 titles:
   include:

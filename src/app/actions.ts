@@ -17,7 +17,7 @@ import { listingCollapseKey } from "@/lib/url";
 
 async function invalidateJobs() {
   revalidateTag(`jobs:${await getCurrentUserId()}`, "max");
-  revalidatePath("/", "layout");
+  revalidatePath("/jobs", "layout");
 }
 
 function isStatus(value: string): value is ApplicationStatus {
@@ -102,7 +102,8 @@ export async function updateJobStatus(input: {
     }),
   );
 
-  await invalidateJobs();
+  // Tag only. The status control refreshes the page after the row's exit animation.
+  revalidateTag(`jobs:${userId}`, "max");
 }
 
 async function saveOverride(jobKeyA: string, jobKeyB: string, verdict: "same" | "different") {

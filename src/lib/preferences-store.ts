@@ -1,7 +1,7 @@
-/** Per-user search preferences in user_profiles; new users start from the search.config.yaml template. */
+/** Per-user search preferences in user_profiles; new users start from a blank product default. */
 import { createHash } from "node:crypto";
 import { eq } from "drizzle-orm";
-import { loadDefaultPreferences, userPreferencesSchema, type UserPreferences } from "./config";
+import { blankPreferences, userPreferencesSchema, type UserPreferences } from "./config";
 import { getDb, withBusyRetry } from "./db";
 import { userProfiles } from "./db/schema";
 
@@ -17,7 +17,7 @@ export async function getUserProfile(userId: string): Promise<UserProfile> {
     const parsed = userPreferencesSchema.safeParse(JSON.parse(row.preferences));
     if (parsed.success) return { preferences: parsed.data, onboarded: row.onboarded };
   }
-  const preferences = loadDefaultPreferences();
+  const preferences = blankPreferences();
   const onboarded = userId === LOCAL_USER;
   await withBusyRetry(() =>
     db

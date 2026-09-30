@@ -3,7 +3,6 @@
 /** Server Actions for /settings and /onboarding: validate + save preferences, live preview, YAML import, resume prefill. */
 
 import { revalidatePath, revalidateTag } from "next/cache";
-import { parse as parseYaml } from "yaml";
 import { userPreferencesSchema, type UserPreferences } from "@/lib/config";
 import { getCurrentUserId } from "@/lib/current-user";
 import { listMatchedJobs } from "@/lib/jobs/query";
@@ -54,7 +53,7 @@ async function persist(formData: FormData, onboarded: boolean): Promise<SaveStat
   }
   await saveUserPreferences(userId, parsed.data, { onboarded });
   revalidateTag(`jobs:${userId}`, "max");
-  revalidatePath("/", "layout");
+  revalidatePath("/jobs", "layout");
   return { status: "saved", at: new Date().toISOString() };
 }
 
@@ -104,17 +103,12 @@ export type ImportResult =
   | { ok: false; message: string; fieldErrors: Record<string, string> };
 
 export async function importPreferencesYaml(text: string): Promise<ImportResult> {
-  let raw: unknown;
-  try {
-    raw = parseYaml(text);
-  } catch (error) {
-    return { ok: false, message: `Not valid YAML: ${(error as Error).message}`, fieldErrors: {} };
+  const { parsePreferencesText } = await import("@/lib/config");
+  const parsed = parsePreferencesText(text);
+  if (!parsed.ok) {
+    return { ok: false, message: parsed.message, fieldErrors: parsed.fieldErrors };
   }
-  const parsed = userPreferencesSchema.safeParse(raw);
-  if (!parsed.success) {
-    return { ok: false, message: "The YAML does not match the preferences format.", fieldErrors: fieldErrorsFrom(parsed.error.issues) };
-  }
-  return { ok: true, preferences: parsed.data };
+  return { ok: true, preferences: parsed.preferences };
 }
 
 export async function prefillFromResume(text: string, aliases: UserPreferences["skills"]["aliases"]) {

@@ -3,7 +3,7 @@
 /** Client dropdown for application status; optimistic UI then a Server Action. */
 
 import { useRouter } from "next/navigation";
-import { useEffect, useState, useTransition } from "react";
+import { useEffect, useTransition } from "react";
 import {
   APPLICATION_STATUS_CLASSES,
   APPLICATION_STATUS_LABELS,
@@ -11,23 +11,36 @@ import {
   type ApplicationStatus,
 } from "@/lib/constants";
 import { updateJobStatus } from "./actions";
+import {
+  beginExit,
+  clearStatus,
+  enqueueStatusWrite,
+  exitDuration,
+  isGeneration,
+  jobStatusKey,
+  liveStatus,
+  nextGeneration,
+  pushUndo,
+  rememberStatus,
+  useStatusVersion,
+} from "./job-status";
 
 type StatusSelectProps = {
   atsProvider: string;
   boardSlug: string;
   externalId: string;
   status: string;
+  title: string;
+  hideDismissed: boolean;
 };
 
-/** Survives rerenders so the select does not snap back before router.refresh(). */
-const localStatus = new Map<string, ApplicationStatus>();
-
-function isStatus(value: string): value is ApplicationStatus {
-  return APPLICATION_STATUSES.includes(value as ApplicationStatus);
+function hidesRow(status: ApplicationStatus, hideDismissed: boolean) {
+  return hideDismissed && (status === "skipped" || status === "not_qualified");
 }
 
-function jobKey(atsProvider: string, boardSlug: string, externalId: string) {
-  return `${atsProvider}:${boardSlug}:${externalId}`;
+/** Survives rerenders so the select does not snap back before router.refresh(). */
+function isStatus(value: string): value is ApplicationStatus {
+  return APPLICATION_STATUSES.includes(value as ApplicationStatus);
 }
 
 export function StatusSelect({
@@ -35,18 +48,18 @@ export function StatusSelect({
   boardSlug,
   externalId,
   status,
+  title,
+  hideDismissed,
 }: StatusSelectProps) {
   const router = useRouter();
   const [, startTransition] = useTransition();
-  const key = jobKey(atsProvider, boardSlug, externalId);
+  const key = jobStatusKey(atsProvider, boardSlug, externalId);
   const serverStatus = isStatus(status) ? status : "new";
-  const [, setTick] = useState(0);
-  const current = localStatus.get(key) ?? serverStatus;
+  useStatusVersion();
+  const current = liveStatus(key, serverStatus);
 
   useEffect(() => {
-    if (localStatus.get(key) === serverStatus) {
-      localStatus.delete(key);
-    }
+    if (liveStatus(key, serverStatus) === serverStatus) clearStatus(key);
   }, [key, serverStatus]);
 
   return (
@@ -55,16 +68,27 @@ export function StatusSelect({
       value={current}
       onChange={(event) => {
         const next = event.target.value;
-        if (!isStatus(next)) return;
-        localStatus.set(key, next);
-        setTick((tick) => tick + 1);
+        if (!isStatus(next) || next === current) return;
+        const generation = nextGeneration(key);
+        rememberStatus(key, next);
+        const willHide = hidesRow(next, hideDismissed);
+        if (willHide) {
+          beginExit(key);
+          pushUndo({ key, title, previous: current, next, atsProvider, boardSlug, externalId });
+        }
         startTransition(async () => {
-          await updateJobStatus({
-            atsProvider,
-            boardSlug,
-            externalId,
-            status: next,
-          });
+          if (willHide) {
+            await new Promise((resolve) => setTimeout(resolve, exitDuration()));
+            if (!isGeneration(key, generation)) return;
+          }
+          try {
+            await enqueueStatusWrite(key, () =>
+              updateJobStatus({ atsProvider, boardSlug, externalId, status: next }),
+            );
+          } catch {
+            return;
+          }
+          if (!isGeneration(key, generation)) return;
           router.refresh();
         });
       }}

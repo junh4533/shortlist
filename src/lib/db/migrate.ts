@@ -1,7 +1,8 @@
 /** Apply numbered .sql migrations in order and record them in schema_migrations. */
 import { readdirSync, readFileSync } from "node:fs";
 import path from "node:path";
-import { dbReady, getClient } from "./client";
+import { dbReady, getClient, getDb } from "./client";
+import { ensureAdmin } from "../auth/admin";
 
 export function migrationsDir(cwd = process.cwd()) {
   return path.join(cwd, "src", "lib", "db", "migrations");
@@ -58,5 +59,6 @@ export async function migrate(options: { log?: boolean } = {}) {
     if (options.log) console.log(`Applied migration ${id}`);
   }
   if (options.log && ran.length === 0) console.log("Migrations up to date");
+  await ensureAdmin(options.log);
   return ran;
 }

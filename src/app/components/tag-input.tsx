@@ -4,6 +4,8 @@
 
 import { useId, useState, type KeyboardEvent } from "react";
 
+import { FieldTip } from "./field-tip";
+
 export function TagInput({
   label,
   value,
@@ -12,6 +14,7 @@ export function TagInput({
   placeholder,
   error,
   help,
+  tip,
 }: {
   label: string;
   value: string[];
@@ -20,6 +23,7 @@ export function TagInput({
   placeholder?: string;
   error?: string;
   help?: string;
+  tip?: string;
 }) {
   const [draft, setDraft] = useState("");
   const inputId = useId();
@@ -46,24 +50,25 @@ export function TagInput({
 
   return (
     <div className="flex flex-col gap-1 text-sm">
-      <label htmlFor={inputId} className="font-medium text-zinc-800">
-        {label}
-      </label>
+      <span className="inline-flex items-center gap-1.5 font-medium text-zinc-800 dark:text-zinc-200">
+        <label htmlFor={inputId}>{label}</label>
+        {tip ? <FieldTip text={tip} /> : null}
+      </span>
       <div
-        className={`flex flex-wrap items-center gap-1.5 rounded-md border bg-white px-2 py-1.5 ${
-          error ? "border-red-400" : "border-zinc-300"
+        className={`flex flex-wrap items-center gap-1.5 rounded-md border bg-white dark:bg-zinc-900 px-2 py-1.5 ${
+          error ? "border-red-400" : "border-zinc-300 dark:border-zinc-700"
         }`}
       >
         {value.map((item) => (
           <span
             key={item}
-            className="inline-flex items-center gap-1 rounded-full bg-zinc-100 px-2 py-0.5 text-xs text-zinc-800"
+            className="inline-flex items-center gap-1 rounded-full bg-zinc-100 dark:bg-zinc-800 px-2 py-0.5 text-xs text-zinc-800 dark:text-zinc-200"
           >
             {item}
             <button
               type="button"
               aria-label={`Remove ${item}`}
-              className="text-zinc-500 hover:text-zinc-900"
+              className="text-zinc-500 dark:text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100"
               onClick={() => onChange(value.filter((existing) => existing !== item))}
             >
               ×
@@ -88,7 +93,7 @@ export function TagInput({
           </datalist>
         ) : null}
       </div>
-      {help ? <p className="text-xs text-zinc-500">{help}</p> : null}
+      {help ? <p className="text-xs text-zinc-500 dark:text-zinc-400">{help}</p> : null}
       {error ? <p className="text-xs text-red-600">{error}</p> : null}
     </div>
   );

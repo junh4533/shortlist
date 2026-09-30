@@ -1,5 +1,5 @@
 /** Home table query: SQL prefilter for one user, then matchJob scoring, twin collapse, sort, and pagination. */
-import { and, desc, eq, isNull, or, sql, type SQL } from "drizzle-orm";
+import { and, desc, eq, isNull, sql, type SQL } from "drizzle-orm";
 import {
   APPLICATION_STATUSES,
   STATUS_PRIORITY,
@@ -11,7 +11,10 @@ import { companies, duplicateOverrides, jobs, jobTracking } from "../db/schema";
 import { matchJob } from "../match";
 import { jobCollapseKey, listingCollapseKey } from "../url";
 import { jobKey, type DuplicateConfidence } from "./duplicates";
+import { formatPay, formatPostedDate } from "./format";
 import { buildPrefilter } from "./prefilter";
+
+export { formatPay, formatPostedDate };
 
 /** Rows fetched from SQL before exact matching; newest first. */
 export const CANDIDATE_CAP = 5000;
@@ -177,22 +180,6 @@ export function compareListedJobs(
   return cmp * sign;
 }
 
-function formatMoney(value: number) {
-  return `$${Math.round(value / 1000)}k`;
-}
-
-export function formatPay(
-  job: Pick<ListedJob, "salaryMin" | "salaryMax" | "salaryUnknown">,
-) {
-  if (job.salaryUnknown || (job.salaryMin == null && job.salaryMax == null)) {
-    return "Unknown";
-  }
-  if (job.salaryMin != null && job.salaryMax != null && job.salaryMin !== job.salaryMax) {
-    return `${formatMoney(job.salaryMin)}–${formatMoney(job.salaryMax)}`;
-  }
-  return formatMoney(job.salaryMax ?? job.salaryMin ?? 0);
-}
-
 export function isWithinMaxAge(
   postedAt: string | null,
   updatedAt: string | null,
@@ -205,18 +192,6 @@ export function isWithinMaxAge(
   const date = new Date(raw);
   if (Number.isNaN(date.getTime())) return !hideUnknownDate;
   return Date.now() - date.getTime() <= maxAgeDays * 24 * 60 * 60 * 1000;
-}
-
-export function formatPostedDate(job: Pick<ListedJob, "postedAt" | "updatedAt">) {
-  const raw = job.postedAt ?? job.updatedAt;
-  if (!raw) return "—";
-  const date = new Date(raw);
-  if (Number.isNaN(date.getTime())) return "—";
-  return date.toLocaleDateString("en-US", {
-    month: "short",
-    day: "numeric",
-    year: "numeric",
-  });
 }
 
 /** FTS5 query: every word must prefix-match title, company, or location. */
@@ -236,6 +211,8 @@ export type ListOptions = {
   pageSize?: number;
   /** Show likely cross-platform duplicates as groups (rows are never hidden). */
   grouped?: boolean;
+  /** Drop skipped and not-qualified rows unless a status filter asks for them. Default true. */
+  hideDismissed?: boolean;
 };
 
 export type JobGroup = {
@@ -255,6 +232,7 @@ export type MatchedJobsPage = {
   pageSize: number;
   /** True when the SQL candidate cap was hit, so older matches may be missing. */
   truncated: boolean;
+  statusCounts: Record<ApplicationStatus, number>;
 };
 
 export type DuplicateOverride = { jobKeyA: string; jobKeyB: string; verdict: string };
@@ -330,15 +308,6 @@ export async function listAllMatchedJobs(
       sql`"jobs"."rowid" IN (SELECT rowid FROM jobs_fts WHERE jobs_fts MATCH ${match})`,
     );
   }
-  const validStatus = APPLICATION_STATUSES.includes(options.status as ApplicationStatus)
-    ? (options.status as ApplicationStatus)
-    : undefined;
-  if (validStatus === "new") {
-    conditions.push(or(isNull(jobTracking.status), eq(jobTracking.status, "new"))!);
-  } else if (validStatus) {
-    conditions.push(eq(jobTracking.status, validStatus));
-  }
-
   const candidates = await getDb()
     .select({ job: jobs, status: jobTracking.status })
     .from(jobs)
@@ -417,24 +386,38 @@ export async function loadDuplicateOverrides(userId: string): Promise<DuplicateO
 export async function listMatchedJobs(options: ListOptions): Promise<MatchedJobsPage> {
   const pageSize = Math.max(1, options.pageSize ?? DEFAULT_PAGE_SIZE);
   const grouped = options.grouped ?? true;
+  const hideDismissed = options.hideDismissed !== false;
   const [{ rows, truncated }, overrides] = await Promise.all([
     listAllMatchedJobs(options),
     grouped ? loadDuplicateOverrides(options.userId) : Promise.resolve([]),
   ]);
+  const validStatus = APPLICATION_STATUSES.includes(options.status as ApplicationStatus)
+    ? (options.status as ApplicationStatus)
+    : undefined;
+  const statusCounts = Object.fromEntries(APPLICATION_STATUSES.map((status) => [status, 0])) as Record<
+    ApplicationStatus,
+    number
+  >;
+  for (const row of rows) statusCounts[row.status] += 1;
+  const visible = rows.filter((row) => {
+    if (validStatus) return row.status === validStatus;
+    return !(hideDismissed && (row.status === "not_qualified" || row.status === "skipped"));
+  });
   const { sort, dir } = parseJobSort(options.sort, options.dir);
-  const groups = groupListedJobs(rows, overrides, grouped).sort((left, right) =>
+  const groups = groupListedJobs(visible, overrides, grouped).sort((left, right) =>
     compareListedJobs(left.primary, right.primary, sort, dir),
   );
   const pageCount = Math.max(1, Math.ceil(groups.length / pageSize));
   const page = Math.min(Math.max(1, Math.floor(options.page ?? 1)), pageCount);
   return {
     groups: groups.slice((page - 1) * pageSize, page * pageSize),
-    totalJobs: rows.length,
+    totalJobs: visible.length,
     totalGroups: groups.length,
     page,
     pageCount,
     pageSize,
     truncated,
+    statusCounts,
   };
 }
 

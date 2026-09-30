@@ -21,9 +21,8 @@ function jobKeyWhere(row: Pick<JobKeyRow, "atsProvider" | "boardSlug" | "externa
   );
 }
 
-function trackingKeyWhere(row: Pick<JobKeyRow, "atsProvider" | "boardSlug" | "externalId">) {
+function trackingForJob(row: Pick<JobKeyRow, "atsProvider" | "boardSlug" | "externalId">) {
   return and(
-    eq(jobTracking.userId, "local"),
     eq(jobTracking.atsProvider, row.atsProvider),
     eq(jobTracking.boardSlug, row.boardSlug),
     eq(jobTracking.externalId, row.externalId),
@@ -71,31 +70,22 @@ export async function dedupeJobsByUrl() {
       if (normalized && keep.url !== normalized) {
         await tx.update(jobs).set({ url: normalized }).where(jobKeyWhere(keep));
       }
-      const keepTracking = await tx
-        .select()
-        .from(jobTracking)
-        .where(trackingKeyWhere(keep))
-        .limit(1);
-      let keepHasTracking = keepTracking.length > 0;
+      const keepTracking = await tx.select().from(jobTracking).where(trackingForJob(keep));
+      const keepUsers = new Set(keepTracking.map((row) => row.userId));
       for (const extra of extras) {
-        if (!keepHasTracking) {
-          const [extraTracking] = await tx
-            .select()
-            .from(jobTracking)
-            .where(trackingKeyWhere(extra))
-            .limit(1);
-          if (extraTracking) {
+        const extraTracking = await tx.select().from(jobTracking).where(trackingForJob(extra));
+        for (const row of extraTracking) {
+          if (!keepUsers.has(row.userId)) {
             await tx.insert(jobTracking).values({
-              ...extraTracking,
-              userId: "local",
+              ...row,
               atsProvider: keep.atsProvider,
               boardSlug: keep.boardSlug,
               externalId: keep.externalId,
             });
-            keepHasTracking = true;
+            keepUsers.add(row.userId);
           }
         }
-        await tx.delete(jobTracking).where(trackingKeyWhere(extra));
+        await tx.delete(jobTracking).where(trackingForJob(extra));
         await tx.delete(jobs).where(jobKeyWhere(extra));
         removed += 1;
       }

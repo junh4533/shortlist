@@ -3,6 +3,11 @@ import { readFileSync } from "node:fs";
 import path from "node:path";
 import { parse as parseYaml } from "yaml";
 import { z } from "zod";
+import {
+  DEFAULT_SENIORITY_ALIASES,
+  DEFAULT_SKILL_ALIASES,
+  DEFAULT_TITLE_ALIASES,
+} from "./aliases";
 
 const weightedList = z.union([
   z.array(z.string()),
@@ -67,8 +72,91 @@ export function defaultPreferencesPath(cwd = process.cwd()) {
   return path.join(cwd, "search.config.yaml");
 }
 
-/** The default template every new user starts from. */
+/** Empty search prefs for a new account; product defaults only (not a person's YAML). */
+export function blankPreferences(): UserPreferences {
+  return {
+    profile: { name: "", home: "", years_experience: 0 },
+    titles: {
+      include: [],
+      exclude: [],
+      prefer: {},
+      aliases: { ...DEFAULT_TITLE_ALIASES },
+    },
+    exclude_phrases: [],
+    locations: {
+      remote_ok: true,
+      hybrid_ok: true,
+      onsite_ok: true,
+      us_only: false,
+      include: [],
+      exclude: [],
+    },
+    pay: {
+      min_usd: 0,
+      max_usd: 0,
+      currency: "USD",
+      period: "year",
+      require_listed_salary: false,
+      min_max_buffer_usd: 0,
+    },
+    freshness: { max_age_days: 21, hide_unknown_date: false, recency_bonus: 20 },
+    skills: {
+      required: [],
+      preferred: [],
+      bonus: [],
+      aliases: { ...DEFAULT_SKILL_ALIASES },
+      min_preferred_hits: 2,
+    },
+    seniority: {
+      prefer: {},
+      exclude: [],
+      require_in_title: false,
+      aliases: { ...DEFAULT_SENIORITY_ALIASES },
+    },
+    group_duplicates: true,
+  };
+}
+
+/** Example fixture in search.config.yaml (tests / schema reference). Not seeded onto new accounts. */
 export function loadDefaultPreferences(cwd = process.cwd()): UserPreferences {
   const raw = readFileSync(defaultPreferencesPath(cwd), "utf8");
   return userPreferencesSchema.parse(parseYaml(raw));
+}
+
+function fieldErrorsFrom(issues: { path: PropertyKey[]; message: string }[]) {
+  const errors: Record<string, string> = {};
+  for (const issue of issues) {
+    const key = issue.path.map(String).join(".") || "form";
+    errors[key] ??= issue.message;
+  }
+  return errors;
+}
+
+export type ParsePreferencesResult =
+  | { ok: true; preferences: UserPreferences }
+  | { ok: false; message: string; fieldErrors: Record<string, string> };
+
+/** Parse a full preferences document from JSON or YAML text. */
+export function parsePreferencesText(text: string): ParsePreferencesResult {
+  const trimmed = text.trim();
+  if (!trimmed) return { ok: false, message: "The file is empty.", fieldErrors: {} };
+  let raw: unknown;
+  try {
+    if (trimmed.startsWith("{") || trimmed.startsWith("[")) {
+      raw = JSON.parse(trimmed);
+    } else {
+      raw = parseYaml(trimmed);
+    }
+  } catch (error) {
+    return { ok: false, message: `Could not parse: ${(error as Error).message}`, fieldErrors: {} };
+  }
+  const parsed = userPreferencesSchema.safeParse(raw);
+  if (!parsed.success) {
+    return {
+      ok: false,
+      message: "The file does not match the preferences format.",
+      fieldErrors: fieldErrorsFrom(parsed.error.issues),
+    };
+  }
+  return { ok: true, preferences: parsed.data };
 }

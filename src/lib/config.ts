@@ -1,8 +1,11 @@
 /** Config entry point: user preferences (search.config.yaml template) and system config (ingest.config.yaml). */
 export {
+  blankPreferences,
   defaultPreferencesPath,
   loadDefaultPreferences,
+  parsePreferencesText,
   userPreferencesSchema,
+  type ParsePreferencesResult,
   type UserPreferences,
 } from "./config/preferences";
 export {

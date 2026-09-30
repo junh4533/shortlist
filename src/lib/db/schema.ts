@@ -110,6 +110,26 @@ export const userProfiles = sqliteTable("user_profiles", {
   updatedAt: text("updated_at").notNull(),
 });
 
+export const betaEmails = sqliteTable("beta_emails", {
+  email: text("email").primaryKey(),
+  createdAt: text("created_at").notNull(),
+});
+
+export const users = sqliteTable("users", {
+  email: text("email").primaryKey(),
+  name: text("name").notNull(),
+  passwordHash: text("password_hash").notNull(),
+  betaAccess: integer("beta_access", { mode: "boolean" }).notNull().default(false),
+  role: text("role").notNull().default("user"),
+  createdAt: text("created_at").notNull(),
+});
+
+export const sessions = sqliteTable("sessions", {
+  token: text("token").primaryKey(),
+  email: text("email").notNull(),
+  expiresAt: text("expires_at").notNull(),
+});
+
 export const jobTracking = sqliteTable(
   "job_tracking",
   {

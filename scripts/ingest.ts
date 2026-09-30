@@ -51,6 +51,18 @@ function selectBoards(rows: Company[], providers: readonly AtsProvider[]) {
   } else {
     selected = selected.filter((row) => row.status === "unknown" || row.status === "error");
   }
+  if (hasFlag("--resume")) {
+    const hours = Number(argValue("--resume-hours") ?? 24);
+    const cutoff = Date.now() - (Number.isFinite(hours) ? hours : 24) * 3_600_000;
+    const before = selected.length;
+    selected = selected.filter((row) => {
+      const checked = Date.parse(row.lastChecked ?? "");
+      return !Number.isFinite(checked) || checked < cutoff;
+    });
+    console.log(
+      `Resume: skipping ${before - selected.length} boards checked in the last ${hours}h; ${selected.length} left`,
+    );
+  }
   if (limit && Number.isFinite(limit)) selected = selected.slice(0, limit);
   return selected;
 }
@@ -147,6 +159,8 @@ async function main() {
   npm run ingest -- --verify-only --limit 100
   npm run ingest -- --provider greenhouse --limit 20
   npm run ingest -- --force           # re-check live boards (skips boards with no US jobs)
+  npm run ingest -- --force --resume  # continue a stopped --force run (skips boards checked in the last 24h)
+  npm run ingest -- --force --resume --resume-hours 48
   npm run ingest -- --force --include-non-us --include-dead
   npm run ingest -- --skip-import     # do not re-read datasets first
   npm run ingest -- --no-group        # skip duplicate grouping at the end`);

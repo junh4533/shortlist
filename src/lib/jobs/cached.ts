@@ -18,7 +18,15 @@ export async function cachedMatchedJobs(options: ListOptions) {
     options.userId,
     preferencesHash(options.preferences),
     version,
-    JSON.stringify([options.q, options.status, options.sort, options.dir, options.page, options.grouped]),
+    JSON.stringify([
+      options.q,
+      options.status,
+      options.sort,
+      options.dir,
+      options.page,
+      options.grouped,
+      options.hideDismissed !== false,
+    ]),
   ];
   return unstable_cache(() => listMatchedJobs(options), key, {
     tags: [`jobs:${options.userId}`, "jobs"],

@@ -1,7 +1,7 @@
 /** /settings: edit search preferences in the browser instead of search.config.yaml. */
 import Link from "next/link";
 import { sql } from "drizzle-orm";
-import { getCurrentUserId } from "@/lib/current-user";
+import { requireApprovedUser } from "@/lib/current-user";
 import { getDb } from "@/lib/db";
 import { jobs } from "@/lib/db/schema";
 import { getUserPreferences } from "@/lib/preferences-store";
@@ -22,17 +22,17 @@ async function locationSuggestions() {
 }
 
 export default async function SettingsPage() {
-  const userId = await getCurrentUserId();
+  const userId = await requireApprovedUser();
   const [preferences, locations] = await Promise.all([getUserPreferences(userId), locationSuggestions()]);
   return (
-    <div className="min-h-full bg-zinc-50 text-zinc-900">
-      <header className="border-b border-zinc-200 bg-white">
+    <div className="min-h-full bg-zinc-50 dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100">
+      <header className="border-b border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-900">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-6">
           <div>
             <h1 className="text-2xl font-semibold tracking-tight">Search settings</h1>
-            <p className="mt-1 text-sm text-zinc-600">Changes apply to your job table as soon as you save.</p>
+            <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">Changes apply to your job table as soon as you save.</p>
           </div>
-          <Link href="/" className="text-sm text-zinc-700 underline underline-offset-2">
+          <Link href="/jobs" className="text-sm text-zinc-700 dark:text-zinc-300 underline underline-offset-2">
             ← Back to jobs
           </Link>
         </div>
